@@ -20,6 +20,7 @@ ENV/
 .ipynb_checkpoints/
 .jupyter_cache/
 book/_build/
+*.slides.html
 
 # OS/files
 .DS_Store
