@@ -2,6 +2,32 @@
 
 This repo contains a Jupyter Book with notebooks runnable in Google Colab. Use the Open in Colab badges at the top of each notebook.
 
+## Setup (local)
+
+Requires Python 3.9+ (recommended: a virtual environment).
+
+```bash
+# 1) Create & activate a virtual environment
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install uv
+
+# 2) Install the package (includes notebook/runtime deps like numpy, torch, ipykernel)
+uv pip install -e .
+
+# 3) Optional: developer tools (linting, testing)
+uv pip install -e .[dev]
+
+# 4) Optional: build the Jupyter Book site
+uv pip install -e .[book]
+jupyter-book build book/
+```
+
+Notes
+- Torch CPU wheels are installed by default. GPU acceleration may require a different wheel/index per your platform—see PyTorch.org for instructions.
+- After installing the dev extra, you can run tests with `pytest`.
+
+
 ## Structure
 
 - `book/_config.yml` and `book/_toc.yml`: Jupyter Book configuration and table of contents
@@ -16,18 +42,9 @@ This repo contains a Jupyter Book with notebooks runnable in Google Colab. Use t
 - In Colab, set Runtime -> Change runtime type -> T4 GPU (optional for U-Net training).
 - First cell installs dependencies for that notebook.
 
-## Build locally (optional)
+## Preview the built site locally (optional)
 
-You can build the book locally if you want to preview:
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -U pip jupyter-book
-jupyter-book build book/
-```
-
-Open `_build/html/index.html`.
+Open `book/_build/html/index.html` after a successful build.
 
 ## Publish on GitHub Pages
 

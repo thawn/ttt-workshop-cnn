@@ -1,2 +1,0 @@
-# Optional: Python project deps for local dev
-jupyter-book>=1.0.0

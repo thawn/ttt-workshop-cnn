@@ -1,0 +1,63 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ttt-workshop-cnn"
+version = "0.1.0"
+description = "Utilities for the TTT CNN workshop (data helpers, reproducibility, simple image ops)."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "Apache-2.0" }
+authors = [
+  { name = "TTT CNN Contributors" }
+]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "License :: OSI Approved :: Apache Software License",
+  "Operating System :: OS Independent",
+  "Typing :: Typed",
+]
+dependencies = [
+  # Core scientific stack used in notebooks and utilities
+  "numpy>=1.23",
+  "scipy>=1.10",
+  "matplotlib>=3.7",
+  "scikit-image>=0.21",
+  "tqdm>=4.66",
+
+  # Deep learning + experimentation
+  "torch>=2.1",
+  "optuna>=3.0",
+  "torchsummary>=1.5",
+  "ipykernel>=6.25",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=7.0",
+  "ruff>=0.5",
+  "black>=24.0",
+]
+book = [
+  # Build the Jupyter Book documentation site
+  "jupyter-book>=1.0.0",
+]
+
+[project.urls]
+Repository = "https://github.com/thawn/ttt-workshop-cnn"
+Issues = "https://github.com/thawn/ttt-workshop-cnn/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ttt_workshop_cnn"]
+
+[tool.black]
+target-version = ["py39", "py310", "py311", "py312"]
+line-length = 100
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+lint.select = ["E", "F", "I", "UP", "B"]
+lint.ignore = ["E203", "E266", "E501"]

@@ -1,7 +1,20 @@
-# Byte-compiled / optimized / DLL files
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+.ruff_cache/
+.ipynb_checkpoints/
+_version.py
+
+# Python envs
+.env
+.venv
+venv/
+ENV/
 
 # Jupyter
 .ipynb_checkpoints/
@@ -11,12 +24,6 @@ book/_build/
 # OS/files
 .DS_Store
 Thumbs.db
-
-# Python envs
-.env
-.venv
-venv/
-ENV/
 
 # Logs
 *.log
