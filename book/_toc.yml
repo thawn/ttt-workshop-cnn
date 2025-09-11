@@ -3,7 +3,7 @@ root: intro
 parts:
   - caption: Convolution basics
     chapters:
-      - file: slides/lecture_slides.slides.html
+      - file: slides/lecture_slides.slides
       - file: exercises/manual_convolution
       - file: exercises/conv_gaussian_filter
   - caption: U-Net
