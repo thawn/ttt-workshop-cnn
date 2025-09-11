@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Iterable, Optional, Tuple
 
 import numpy as np
-from scipy import ndimage
+from scipy import signal, ndimage
 import matplotlib.pyplot as plt
 
 
@@ -124,6 +124,25 @@ def draw_gaussian_kernel(size: int = 3, sigma: float = 1.0) -> np.ndarray:
     return kernel / np.sum(kernel)
 
 
+def add_axis_grid(ax: plt.Axes, pad=0.0):
+    """Add a grid to a matplotlib axis.
+
+    Parameters
+    ----------
+    ax : plt.Axes
+        The axis to add the grid to.
+
+    """
+    xlim = ax.get_xlim()
+    ylim = ax.get_ylim()
+    ax.set_xticks(np.arange(xlim[0] - pad, xlim[1] + pad + 1, 1), minor=True)
+    ax.set_yticks(np.arange(ylim[1] - pad, ylim[0] + pad + 1, 1), minor=True)
+    ax.grid(True, which="minor", alpha=0.3, linewidth=0.5)
+    ax.set_xticks([])
+    ax.set_yticks([])
+    ax.tick_params(which="both", size=0)
+
+
 def animate_convolution(image, kernel, interval=50):
     """
     Create an animation that applies convolution step by step.
@@ -158,18 +177,10 @@ def animate_convolution(image, kernel, interval=50):
     axs[2].set_title("Convolved Output")
 
     for ax in axs[:2]:
-        ax.set_xticks(np.arange(-0.5, image.shape[1], 1), minor=True)
-        ax.set_yticks(np.arange(-0.5, image.shape[0], 1), minor=True)
+        add_axis_grid(ax)
 
     # shift axs[2] by one pixel to the right and down so that the output is centered
-    axs[2].set_xticks(np.arange(-1.5, image.shape[1] - 1, 1), minor=True)
-    axs[2].set_yticks(np.arange(-1.5, image.shape[0] - 1, 1), minor=True)
-
-    for ax in axs:
-        ax.grid(True, which="minor", alpha=0.3, linewidth=0.5)
-        ax.set_xticks([])
-        ax.set_yticks([])
-        ax.tick_params(which="both", size=0)
+    add_axis_grid(axs[2], pad=1)
 
     def update(frame):
         """
@@ -210,6 +221,50 @@ def animate_convolution(image, kernel, interval=50):
     plt.close(fig)
 
     return anim
+
+
+def plot_input_kernel_output(
+    image: np.ndarray,
+    kernel: np.ndarray,
+    axs: Optional[Iterable[plt.Axes]] = None,
+    titles: Iterable[str] = ("Input Image", "Kernel", "Convolved Output"),
+) -> Tuple[plt.Figure, Iterable[plt.Axes]]:
+    """Plot the input image, kernel, and convolved output side by side.
+
+    Parameters
+    ----------
+    image : np.ndarray
+        Input image to convolve.
+    kernel : np.ndarray
+        Convolution kernel to apply.
+    axs : Iterable[plt.Axes], optional
+        Pre-existing axes to use for plotting. If ``None``, new axes will be created.
+
+    Returns
+    -------
+    Tuple[plt.Figure, Iterable[plt.Axes]]
+        The figure and axes containing the plots.
+    """
+    if axs is None:
+        fig, axs = plt.subplots(1, 3, figsize=(12, 4))
+    else:
+        fig = axs[0].figure
+
+    axs[0].imshow(image, cmap="inferno")
+    axs[0].set_title(titles[0])
+    add_axis_grid(axs[0])
+
+    axs[1].imshow(kernel, cmap="inferno", vmin=0, vmax=1)
+    axs[1].set_title(titles[1])
+    add_axis_grid(axs[1], pad=6)
+
+    convolved = signal.correlate(image, kernel, mode="valid") / np.sum(kernel)
+
+    axs[2].imshow(convolved, cmap="inferno")
+    axs[2].set_title(titles[2])
+    add_axis_grid(axs[2], pad=1)
+
+    return fig, axs
 
 
 def normalize_minmax(x, min_val: Optional[float] = None, max_val: Optional[float] = None):
@@ -280,25 +335,3 @@ def normalize_minmax(x, min_val: Optional[float] = None, max_val: Optional[float
 
     # Fallback: list/tuple -> list of floats
     return [(xi - min_val) / (max_val - min_val) for xi in x]
-
-
-def project_root(start: Optional[os.PathLike[str] | str] = None) -> Path:
-    """Return the project root path (directory containing pyproject.toml).
-
-    Parameters
-    ----------
-    start : path-like, optional
-        Starting directory for the search. Defaults to the current working
-        directory.
-
-    Returns
-    -------
-    pathlib.Path
-        The absolute path to the repository/project root.
-    """
-
-    cur = Path(start or os.getcwd()).resolve()
-    for p in [cur, *cur.parents]:
-        if (p / "pyproject.toml").exists() or (p / ".git").exists():
-            return p
-    return cur
