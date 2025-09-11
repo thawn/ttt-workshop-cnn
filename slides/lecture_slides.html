@@ -413,7 +413,9 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#under-the-hood-of-cnns">Under the hood of CNNs</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#padding">Padding</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#padding-keeps-input-and-output-dimensions-identical">Padding keeps input and output dimensions identical</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#padding-mode-reflect">Padding mode <code class="docutils literal notranslate"><span class="pre">reflect</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#padding-mode-wrap">Padding mode <code class="docutils literal notranslate"><span class="pre">wrap</span></code></a></li>
 </ul>
             </nav>
         </div>
@@ -446,26 +448,21 @@ document.write(`
 </div>
 </div>
 </div>
-<section id="under-the-hood-of-cnns">
-<h2>Under the hood of CNNs<a class="headerlink" href="#under-the-hood-of-cnns" title="Link to this heading">#</a></h2>
-<p>Convolution is defined as:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Math</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(I * K)(i, j) = \sum_m \sum_n I(m, n) K(i - m, j - n)&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">smiley</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">draw_smiley</span><span class="p">()</span>
+<span class="n">kernel</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">draw_gaussian_kernel</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_latex math notranslate nohighlight">
-\[\displaystyle (I * K)(i, j) = \sum_m \sum_n I(m, n) K(i - m, j - n)\]</div>
 </div>
-</div>
+<section id="under-the-hood-of-cnns">
+<h2>Under the hood of CNNs<a class="headerlink" href="#under-the-hood-of-cnns" title="Link to this heading">#</a></h2>
+<p>Convolution is defined as:</p>
+<p><span class="math notranslate nohighlight">\((I * K)(i, j) = \sum_m \sum_n I(m, n) K(i - m, j - n)\)</span></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># %matplotlib widget</span>
-<span class="n">smiley</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">draw_smiley</span><span class="p">()</span>
-<span class="n">kernel</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">draw_gaussian_kernel</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">animation</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">animate_convolution</span><span class="p">(</span><span class="n">smiley</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">animation</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">animate_convolution</span><span class="p">(</span><span class="n">smiley</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
 <span class="n">HTML</span><span class="p">(</span><span class="n">animation</span><span class="o">.</span><span class="n">to_jshtml</span><span class="p">())</span>
 </pre></div>
 </div>
@@ -656,42 +653,42 @@ input[type=range].anim-slider {
 </style>
 
 <div class="animation">
-  <img id="_anim_img554d61196d2c453eacf57efb9b99f9c5">
+  <img id="_anim_imgab5e7aa422bf4fd08f0a67e97955ffcc">
   <div class="anim-controls">
-    <input id="_anim_slider554d61196d2c453eacf57efb9b99f9c5" type="range" class="anim-slider"
+    <input id="_anim_sliderab5e7aa422bf4fd08f0a67e97955ffcc" type="range" class="anim-slider"
            name="points" min="0" max="1" step="1" value="0"
-           oninput="anim554d61196d2c453eacf57efb9b99f9c5.set_frame(parseInt(this.value));">
+           oninput="animab5e7aa422bf4fd08f0a67e97955ffcc.set_frame(parseInt(this.value));">
     <div class="anim-buttons">
-      <button title="Decrease speed" aria-label="Decrease speed" onclick="anim554d61196d2c453eacf57efb9b99f9c5.slower()">
+      <button title="Decrease speed" aria-label="Decrease speed" onclick="animab5e7aa422bf4fd08f0a67e97955ffcc.slower()">
           <i class="fa fa-minus"></i></button>
-      <button title="First frame" aria-label="First frame" onclick="anim554d61196d2c453eacf57efb9b99f9c5.first_frame()">
+      <button title="First frame" aria-label="First frame" onclick="animab5e7aa422bf4fd08f0a67e97955ffcc.first_frame()">
         <i class="fa fa-fast-backward"></i></button>
-      <button title="Previous frame" aria-label="Previous frame" onclick="anim554d61196d2c453eacf57efb9b99f9c5.previous_frame()">
+      <button title="Previous frame" aria-label="Previous frame" onclick="animab5e7aa422bf4fd08f0a67e97955ffcc.previous_frame()">
           <i class="fa fa-step-backward"></i></button>
-      <button title="Play backwards" aria-label="Play backwards" onclick="anim554d61196d2c453eacf57efb9b99f9c5.reverse_animation()">
+      <button title="Play backwards" aria-label="Play backwards" onclick="animab5e7aa422bf4fd08f0a67e97955ffcc.reverse_animation()">
           <i class="fa fa-play fa-flip-horizontal"></i></button>
-      <button title="Pause" aria-label="Pause" onclick="anim554d61196d2c453eacf57efb9b99f9c5.pause_animation()">
+      <button title="Pause" aria-label="Pause" onclick="animab5e7aa422bf4fd08f0a67e97955ffcc.pause_animation()">
           <i class="fa fa-pause"></i></button>
-      <button title="Play" aria-label="Play" onclick="anim554d61196d2c453eacf57efb9b99f9c5.play_animation()">
+      <button title="Play" aria-label="Play" onclick="animab5e7aa422bf4fd08f0a67e97955ffcc.play_animation()">
           <i class="fa fa-play"></i></button>
-      <button title="Next frame" aria-label="Next frame" onclick="anim554d61196d2c453eacf57efb9b99f9c5.next_frame()">
+      <button title="Next frame" aria-label="Next frame" onclick="animab5e7aa422bf4fd08f0a67e97955ffcc.next_frame()">
           <i class="fa fa-step-forward"></i></button>
-      <button title="Last frame" aria-label="Last frame" onclick="anim554d61196d2c453eacf57efb9b99f9c5.last_frame()">
+      <button title="Last frame" aria-label="Last frame" onclick="animab5e7aa422bf4fd08f0a67e97955ffcc.last_frame()">
           <i class="fa fa-fast-forward"></i></button>
-      <button title="Increase speed" aria-label="Increase speed" onclick="anim554d61196d2c453eacf57efb9b99f9c5.faster()">
+      <button title="Increase speed" aria-label="Increase speed" onclick="animab5e7aa422bf4fd08f0a67e97955ffcc.faster()">
           <i class="fa fa-plus"></i></button>
     </div>
-    <form title="Repetition mode" aria-label="Repetition mode" action="#n" name="_anim_loop_select554d61196d2c453eacf57efb9b99f9c5"
+    <form title="Repetition mode" aria-label="Repetition mode" action="#n" name="_anim_loop_selectab5e7aa422bf4fd08f0a67e97955ffcc"
           class="anim-state">
-      <input type="radio" name="state" value="once" id="_anim_radio1_554d61196d2c453eacf57efb9b99f9c5"
+      <input type="radio" name="state" value="once" id="_anim_radio1_ab5e7aa422bf4fd08f0a67e97955ffcc"
              >
-      <label for="_anim_radio1_554d61196d2c453eacf57efb9b99f9c5">Once</label>
-      <input type="radio" name="state" value="loop" id="_anim_radio2_554d61196d2c453eacf57efb9b99f9c5"
+      <label for="_anim_radio1_ab5e7aa422bf4fd08f0a67e97955ffcc">Once</label>
+      <input type="radio" name="state" value="loop" id="_anim_radio2_ab5e7aa422bf4fd08f0a67e97955ffcc"
              checked>
-      <label for="_anim_radio2_554d61196d2c453eacf57efb9b99f9c5">Loop</label>
-      <input type="radio" name="state" value="reflect" id="_anim_radio3_554d61196d2c453eacf57efb9b99f9c5"
+      <label for="_anim_radio2_ab5e7aa422bf4fd08f0a67e97955ffcc">Loop</label>
+      <input type="radio" name="state" value="reflect" id="_anim_radio3_ab5e7aa422bf4fd08f0a67e97955ffcc"
              >
-      <label for="_anim_radio3_554d61196d2c453eacf57efb9b99f9c5">Reflect</label>
+      <label for="_anim_radio3_ab5e7aa422bf4fd08f0a67e97955ffcc">Reflect</label>
     </form>
   </div>
 </div>
@@ -701,9 +698,9 @@ input[type=range].anim-slider {
   /* Instantiate the Animation class. */
   /* The IDs given should match those used in the template above. */
   (function() {
-    var img_id = "_anim_img554d61196d2c453eacf57efb9b99f9c5";
-    var slider_id = "_anim_slider554d61196d2c453eacf57efb9b99f9c5";
-    var loop_select_id = "_anim_loop_select554d61196d2c453eacf57efb9b99f9c5";
+    var img_id = "_anim_imgab5e7aa422bf4fd08f0a67e97955ffcc";
+    var slider_id = "_anim_sliderab5e7aa422bf4fd08f0a67e97955ffcc";
+    var loop_select_id = "_anim_loop_selectab5e7aa422bf4fd08f0a67e97955ffcc";
     var frames = new Array(196);
     
   frames[0] = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABLAAAAGQCAYAAAC+tZleAAAAOnRFWHRTb2Z0d2FyZQBNYXRwbG90\
@@ -46299,7 +46296,7 @@ AAAAiibAAgAAAKBoAiwAAAAAiibAAgAAAKBoAiwAAAAAUsn+H15k2JOnQmOnAAAAAElFTkSuQmCC\
     /* set a timeout to make sure all the above elements are created before
        the object is initialized. */
     setTimeout(function() {
-        anim554d61196d2c453eacf57efb9b99f9c5 = new Animation(frames, img_id, slider_id, 200.0,
+        animab5e7aa422bf4fd08f0a67e97955ffcc = new Animation(frames, img_id, slider_id, 200.0,
                                  loop_select_id);
     }, 0);
   })()
@@ -46308,54 +46305,47 @@ AAAAiibAAgAAAKBoAiwAAAAAiibAAgAAAKBoAiwAAAAAUsn+H15k2JOnQmOnAAAAAElFTkSuQmCC\
 </div>
 <p>Note how the output is smaller than the input. This can be avoided using padding</p>
 </section>
-<section id="padding">
-<h2>Padding<a class="headerlink" href="#padding" title="Link to this heading">#</a></h2>
+<section id="padding-keeps-input-and-output-dimensions-identical">
+<h2>Padding keeps input and output dimensions identical<a class="headerlink" href="#padding-keeps-input-and-output-dimensions-identical" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">padded_smiley</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">smiley</span><span class="p">,</span> <span class="n">pad_width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span> <span class="n">constant_values</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">utils</span><span class="o">.</span><span class="n">plot_input_kernel_output</span><span class="p">(</span><span class="n">padded_smiley</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">titles</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Padded Input Image&quot;</span><span class="p">,</span> <span class="s2">&quot;Kernel&quot;</span><span class="p">,</span> <span class="s2">&quot;Convolved Output&quot;</span><span class="p">))</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">plot_input_kernel_output</span><span class="p">(</span><span class="n">padded_smiley</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">titles</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Padded Input Image&quot;</span><span class="p">,</span> <span class="s2">&quot;Kernel&quot;</span><span class="p">,</span> <span class="s2">&quot;Convolved Output&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&lt;Figure size 1200x400 with 3 Axes&gt;,
- array([&lt;Axes: title={&#39;center&#39;: &#39;Padded Input Image&#39;}&gt;,
-        &lt;Axes: title={&#39;center&#39;: &#39;Kernel&#39;}&gt;,
-        &lt;Axes: title={&#39;center&#39;: &#39;Convolved Output&#39;}&gt;], dtype=object))
-</pre></div>
-</div>
 <img alt="../_images/1f58eac546ee56c16cda665348731cfbd5c72dbd4141bca3bcab6f8a4fc49cf6.png" src="../_images/1f58eac546ee56c16cda665348731cfbd5c72dbd4141bca3bcab6f8a4fc49cf6.png" />
 </div>
 </div>
+</section>
+<section id="padding-mode-reflect">
+<h2>Padding mode <code class="docutils literal notranslate"><span class="pre">reflect</span></code><a class="headerlink" href="#padding-mode-reflect" title="Link to this heading">#</a></h2>
+<p>often causes less artefacts</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">padded_smiley</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">smiley</span><span class="p">,</span> <span class="n">pad_width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;reflect&#39;</span><span class="p">)</span>
-<span class="n">utils</span><span class="o">.</span><span class="n">plot_input_kernel_output</span><span class="p">(</span><span class="n">padded_smiley</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">titles</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Padded Input Image&quot;</span><span class="p">,</span> <span class="s2">&quot;Kernel&quot;</span><span class="p">,</span> <span class="s2">&quot;Convolved Output&quot;</span><span class="p">))</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">plot_input_kernel_output</span><span class="p">(</span><span class="n">padded_smiley</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">titles</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Padded Input Image&quot;</span><span class="p">,</span> <span class="s2">&quot;Kernel&quot;</span><span class="p">,</span> <span class="s2">&quot;Convolved Output&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&lt;Figure size 1200x400 with 3 Axes&gt;,
- array([&lt;Axes: title={&#39;center&#39;: &#39;Padded Input Image&#39;}&gt;,
-        &lt;Axes: title={&#39;center&#39;: &#39;Kernel&#39;}&gt;,
-        &lt;Axes: title={&#39;center&#39;: &#39;Convolved Output&#39;}&gt;], dtype=object))
-</pre></div>
-</div>
 <img alt="../_images/5f861aaeae2c0361f930e681fa17c77516090e790c62ebc73fd8b7ece8d699b1.png" src="../_images/5f861aaeae2c0361f930e681fa17c77516090e790c62ebc73fd8b7ece8d699b1.png" />
 </div>
 </div>
+</section>
+<section id="padding-mode-wrap">
+<h2>Padding mode <code class="docutils literal notranslate"><span class="pre">wrap</span></code><a class="headerlink" href="#padding-mode-wrap" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">padded_smiley</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">smiley</span><span class="p">,</span> <span class="n">pad_width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;wrap&#39;</span><span class="p">)</span>
-<span class="n">utils</span><span class="o">.</span><span class="n">plot_input_kernel_output</span><span class="p">(</span><span class="n">padded_smiley</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">titles</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Padded Input Image&quot;</span><span class="p">,</span> <span class="s2">&quot;Kernel&quot;</span><span class="p">,</span> <span class="s2">&quot;Convolved Output&quot;</span><span class="p">))</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">plot_input_kernel_output</span><span class="p">(</span><span class="n">padded_smiley</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">titles</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Padded Input Image&quot;</span><span class="p">,</span> <span class="s2">&quot;Kernel&quot;</span><span class="p">,</span> <span class="s2">&quot;Convolved Output&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&lt;Figure size 1200x400 with 3 Axes&gt;,
- array([&lt;Axes: title={&#39;center&#39;: &#39;Padded Input Image&#39;}&gt;,
-        &lt;Axes: title={&#39;center&#39;: &#39;Kernel&#39;}&gt;,
-        &lt;Axes: title={&#39;center&#39;: &#39;Convolved Output&#39;}&gt;], dtype=object))
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/korten/Documents/workspace/ttt-workshop-cnn/venv/lib/python3.11/site-packages/scipy/signal/_signaltools.py:311: RuntimeWarning: invalid value encountered in cast
+  z = _sigtools._correlateND(a_in1, a_in2, out, val)
 </pre></div>
 </div>
 <img alt="../_images/ed8002c8c6ffb836216e4491b5220db771211facf5b753d386f1610ac25694cd.png" src="../_images/ed8002c8c6ffb836216e4491b5220db771211facf5b753d386f1610ac25694cd.png" />
@@ -46411,7 +46401,9 @@ AAAAiibAAgAAAKBoAiwAAAAAiibAAgAAAKBoAiwAAAAAUsn+H15k2JOnQmOnAAAAAElFTkSuQmCC\
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#under-the-hood-of-cnns">Under the hood of CNNs</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#padding">Padding</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#padding-keeps-input-and-output-dimensions-identical">Padding keeps input and output dimensions identical</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#padding-mode-reflect">Padding mode <code class="docutils literal notranslate"><span class="pre">reflect</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#padding-mode-wrap">Padding mode <code class="docutils literal notranslate"><span class="pre">wrap</span></code></a></li>
 </ul>
   </nav></div>
 
