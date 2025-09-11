@@ -1,16 +1,14 @@
 format: jb-book
 root: intro
 parts:
-  - caption: Slides
+  - caption: Convolution basics
     chapters:
       - file: slides/lecture_slides
-  - caption: Exercises
-    chapters:
       - file: exercises/manual_convolution
       - file: exercises/conv_gaussian_filter
-      - file: exercises/unet_bbbc039_pair_programming
-      - file: exercises/optuna_tuning
-  - caption: Self-teaching
+  - caption: U-Net
     chapters:
       - file: self_teach/unet_concepts
+      - file: exercises/unet_bbbc039_pair_programming
       - file: self_teach/hyperparameters
+      - file: exercises/optuna_tuning
