@@ -1,0 +1,17 @@
+# Book settings
+# See https://jupyterbook.org/customize/config.html
+
+root: intro
+repository:
+  url: https://github.com/USER/teaching-cnn
+  path_to_book: book/
+  branch: main
+html:
+  use_issues_button: true
+  use_repository_button: true
+  home_page_in_navbar: true
+  extra_navbar: "CNN Train-the-Trainer"
+launch_buttons:
+  colab_url: "https://colab.research.google.com"
+execute:
+  execute_notebooks: "off" # we execute in Colab, not during build
