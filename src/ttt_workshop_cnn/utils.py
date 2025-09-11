@@ -206,6 +206,9 @@ def animate_convolution(image, kernel, interval=50):
     frames = [(i, j) for i in range(out.shape[0]) for j in range(out.shape[1])]
     anim = animation.FuncAnimation(fig, update, frames=frames, blit=False, repeat=True, interval=interval)
 
+    # Prevent automatic display in Jupyter notebooks
+    plt.close(fig)
+
     return anim
 
 
