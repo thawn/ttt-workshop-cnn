@@ -21,24 +21,26 @@ classifiers = [
 ]
 dependencies = [
   # Core scientific stack used in notebooks and utilities
-  "numpy>=1.23",
-  "scipy>=1.10",
-  "matplotlib>=3.7",
-  "scikit-image>=0.21",
-  "tqdm>=4.66",
+  "numpy",
+  "scipy",
+  "matplotlib",
+  "ipympl",
+  "ipywidgets",
+  "scikit-image",
+  "tqdm",
 
   # Deep learning + experimentation
-  "torch>=2.1",
-  "optuna>=3.0",
-  "torchsummary>=1.5",
-  "ipykernel>=6.25",
+  "torch",
+  "optuna",
+  "torchsummary",
+  "ipykernel",
 ]
 
 [project.optional-dependencies]
 dev = [
-  "pytest>=7.0",
-  "ruff>=0.5",
-  "black>=24.0",
+  "pytest",
+  "ruff",
+  "black",
 ]
 book = [
   # Build the Jupyter Book documentation site
