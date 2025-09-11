@@ -391,7 +391,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -407,6 +409,15 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#under-the-hood-of-cnns">Under the hood of CNNs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#padding">Padding</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -427,6 +438,65 @@ document.write(`
 <li><p>Microscopy use cases</p></li>
 <li><p>Teaching methods</p></li>
 </ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">ttt_workshop_cnn</span><span class="w"> </span><span class="kn">import</span> <span class="n">utils</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="under-the-hood-of-cnns">
+<h2>Under the hood of CNNs<a class="headerlink" href="#under-the-hood-of-cnns" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> widget
+<span class="n">smiley</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">draw_smiley</span><span class="p">()</span>
+<span class="n">kernel</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">draw_gaussian_kernel</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">animation</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">animate_convolution</span><span class="p">(</span><span class="n">smiley</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "128c592777ad48398be6f458b841883d", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<p>Note how the output is smaller than the input. This can be avoided using padding</p>
+</section>
+<section id="padding">
+<h2>Padding<a class="headerlink" href="#padding" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">padded_smiley</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">smiley</span><span class="p">,</span> <span class="n">pad_width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span> <span class="n">constant_values</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">padded_animation</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">animate_convolution</span><span class="p">(</span><span class="n">padded_smiley</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "432f9bcce27e4881b555d42469c71c75", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">padded_smiley</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">smiley</span><span class="p">,</span> <span class="n">pad_width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;reflect&#39;</span><span class="p">)</span>
+<span class="n">padded_animation</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">animate_convolution</span><span class="p">(</span><span class="n">padded_smiley</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "bd6fb8c6e8ee4a88a835ece95e82a84a", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">padded_smiley</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">smiley</span><span class="p">,</span> <span class="n">pad_width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;wrap&#39;</span><span class="p">)</span>
+<span class="n">padded_animation</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">animate_convolution</span><span class="p">(</span><span class="n">padded_smiley</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "e091f981884d4c60a6c439f0939a200b", "version_major": 2, "version_minor": 0}</script></div>
+</div>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -483,6 +553,22 @@ document.write(`
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#under-the-hood-of-cnns">Under the hood of CNNs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#padding">Padding</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>
