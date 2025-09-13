@@ -32,3 +32,12 @@ Thumbs.db
 # Editors
 .vscode/
 .idea/
+
+# old material
+old_material/
+
+# generated media
+*.mp4
+*.gif
+*.avi
+*.png
