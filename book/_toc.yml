@@ -1,9 +1,9 @@
 format: jb-book
 root: intro
 parts:
-  - caption: Convolution basics
+  - caption: Under the hood of CNNs
     chapters:
-      - file: slides/lecture_slides
+      - file: slides/flipped_classroom
       - file: exercises/manual_convolution
       - file: exercises/conv_gaussian_filter
   - caption: U-Net
