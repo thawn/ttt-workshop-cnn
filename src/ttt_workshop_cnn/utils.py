@@ -5,8 +5,6 @@ Functions here are intentionally lightweight, with no heavy deps.
 
 from __future__ import annotations
 
-from cmath import rect
-import os
 import random
 from pathlib import Path
 from typing import Iterable, Optional, Tuple
@@ -14,6 +12,10 @@ from typing import Iterable, Optional, Tuple
 import numpy as np
 from scipy import signal, ndimage
 import matplotlib.pyplot as plt
+
+plt.rcParams["svg.fonttype"] = "none"  # Keep text as text in SVGs
+
+output_path = Path("output")
 
 
 def ensure_seed(seed: int = 42) -> int:
@@ -237,6 +239,21 @@ def animate_convolution(image, kernel, stride=1, interval=50):
         # Clear the output at the beginning of each animation cycle
         if i == 0 and j == 0:
             out.fill(0)
+        # Clear any existing patches
+        for patch in axs[0].patches:
+            patch.remove()
+
+        # Add dark transparent rectangle to show convolution region
+        rect = plt.Rectangle(
+            (j - 0.5, i - 0.5),
+            kernel.shape[1],
+            kernel.shape[0],
+            linewidth=2,
+            edgecolor="cyan",
+            facecolor="black",
+            alpha=0.3,
+        )
+        axs[0].add_patch(rect)
 
         # Update kernel position on black background
         kernel_bg_current = np.zeros_like(image)
@@ -249,7 +266,7 @@ def animate_convolution(image, kernel, stride=1, interval=50):
         out[out_i, out_j] = float(np.sum(region * kernel))
         im.set_array(out)
 
-        return [kernel_im, im]
+        return [kernel_im, im, rect]
 
     frames = [
         (i, j)
@@ -257,7 +274,19 @@ def animate_convolution(image, kernel, stride=1, interval=50):
         for j in range(0, image.shape[1] - kernel.shape[1] + 1, stride)
     ]
     anim = animation.FuncAnimation(fig, update, frames=frames, blit=False, repeat=True, interval=interval)
-
+    # Save animation as MP4 if requested
+    filename = f"convolution_animation{stride}_{interval}ms"
+    try:
+        # Try to save as MP4 using ffmpeg writer
+        writer = animation.FFMpegWriter(fps=1000 // interval, bitrate=1800)
+        anim.save(output_path / f"{filename}.mp4", writer=writer)
+    except Exception:
+        # Fallback: try pillow writer for GIF
+        try:
+            anim.save(output_path / f"{filename}.gif", writer="pillow", fps=1000 // interval)
+        except Exception:
+            # If both fail, just continue without saving
+            pass
     # Prevent automatic display in Jupyter notebooks
     plt.close(fig)
 
@@ -280,6 +309,8 @@ def plot_input_kernel_output(
         Convolution kernel to apply.
     axs : Iterable[plt.Axes], optional
         Pre-existing axes to use for plotting. If ``None``, new axes will be created.
+    titles : Iterable[str], optional
+        Titles for each panel. Default: ("Input Image", "Kernel", "Convolved Map").
 
     Returns
     -------
@@ -304,7 +335,9 @@ def plot_input_kernel_output(
     axs[2].imshow(convolved, cmap="inferno")
     axs[2].set_title(titles[2])
     add_axis_grid(axs[2], pad=1)
-
+    fig.tight_layout()
+    # Save figure as SVG
+    fig.savefig(output_path / f"input_kernel_output_{'_'.join(titles)}.svg", format="svg", bbox_inches="tight")
     return fig, axs
 
 
@@ -423,10 +456,11 @@ def plot_three_kernels(
     for ax in [axs[3], axs[6]]:
         ax.remove()
     plt.tight_layout()
+    fig.savefig(output_path / f"input_kernel_output_{'_'.join(titles)}.svg", format="svg", bbox_inches="tight")
     return fig, axs
 
 
-def plot_receptive_field(
+def plot_perceptive_field(
     image: np.ndarray, kernel_layers: int = 2, kernel_sizes: Tuple[int] = (3, 5)
 ) -> Tuple[plt.Figure, Iterable[plt.Axes]]:
 
@@ -450,26 +484,26 @@ def plot_receptive_field(
         y_pad += pad + offset
         x_pad = -0.5 + pad + offset
         for n in range(kernel_layers):
-            receptive_field = (kernel_size - 1) * (kernel_layers - n + 1) + 1
+            perceptive_field = (kernel_size - 1) * (kernel_layers - n + 1) + 1
             x_pad -= n
             y_pad -= n
             if n < 1:
-                receptive_field -= kernel_size - 1
+                perceptive_field -= kernel_size - 1
                 rect_ax = f"image"
-                x_pos = image.shape[1] // 2 - receptive_field / 2
-                y_pos = y_pad - (receptive_field - kernel_size) // 2 + i * kernel_size
-                annotation = "Receptive Field"
+                x_pos = image.shape[1] // 2 - perceptive_field / 2
+                y_pos = y_pad - (perceptive_field - kernel_size) // 2 + i * kernel_size
+                annotation = "Perceptive Field"
             else:
-                x_pos = kernel_size / 2 - receptive_field / 2 - 0.5
-                y_pos = kernel_size / 2 - receptive_field / 2 - 0.5
+                x_pos = kernel_size / 2 - perceptive_field / 2 - 0.5
+                y_pos = kernel_size / 2 - perceptive_field / 2 - 0.5
                 rect_ax = f"kernel{kernel_size}_{n-1}"
             kernel = draw_gaussian_kernel(size=kernel_size, sigma=1)
             axs[f"kernel{kernel_size}_{n}"].imshow(kernel, cmap="inferno")
             add_axis_grid(axs[f"kernel{kernel_size}_{n}"], pad=pad, offset=offset)
             rect = plt.Rectangle(
                 (x_pos, y_pos),
-                receptive_field,
-                receptive_field,
+                perceptive_field,
+                perceptive_field,
                 linewidth=2,
                 edgecolor="cyan",
                 facecolor="none",
@@ -477,8 +511,8 @@ def plot_receptive_field(
             axs[rect_ax].add_patch(rect)
             text = axs[rect_ax].annotate(
                 annotation,
-                xy=(x_pos + receptive_field / 2, y_pos),
-                xytext=(x_pos + receptive_field / 2, y_pos - 0.2),
+                xy=(x_pos + perceptive_field / 2, y_pos),
+                xytext=(x_pos + perceptive_field / 2, y_pos - 0.2),
                 color="cyan",
                 fontsize=12,
                 ha="center",
@@ -488,6 +522,11 @@ def plot_receptive_field(
             rects.append(rect)
 
     fig.tight_layout(pad=0.0)
+    fig.savefig(
+        output_path / f"perceptive_field_layers{kernel_layers}_kernel_sizes{kernel_sizes}.svg",
+        format="svg",
+        bbox_inches="tight",
+    )
 
 
 def draw_lines(rect, kernel3, fig, axs):
