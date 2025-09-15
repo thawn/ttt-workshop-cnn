@@ -422,8 +422,8 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#padding-mode-reflect">Padding mode <code class="docutils literal notranslate"><span class="pre">reflect</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stride-determines-how-far-the-kernel-moves-between-iterations">Stride determines how far the kernel moves between iterations</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#n-kernels-create-n-feature-maps"><span class="math notranslate nohighlight">\(n\)</span> kernels create <span class="math notranslate nohighlight">\(n\)</span> feature maps</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-receptive-field-limits-the-amount-of-context-a-cnn-can-learn">The receptive field limits the amount of context a CNN can learn</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#receptive-fields-of-consecutive-layers-stack-up">Receptive fields of consecutive layers stack up</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-perceptive-field-limits-the-amount-of-context-a-cnn-can-learn">The perceptive field limits the amount of context a CNN can learn</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#perceptive-fields-of-consecutive-layers-stack-up">Perceptive fields of consecutive layers stack up</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-3x3-layers-is-more-parameter-efficient-than-increasing-kernel-size">Adding 3x3 layers is more parameter efficient than increasing kernel size</a></li>
 </ul>
             </nav>
@@ -439,11 +439,13 @@ document.write(`
   <section class="tex2jax_ignore mathjax_ignore" id="under-the-hood-of-cnns">
 <h1>Under the hood of CNNs<a class="headerlink" href="#under-the-hood-of-cnns" title="Link to this heading">#</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com/github/thawn/ttt-workshop-cnn/blob/main/book/flipped_classroom/CNN_under_the_hood.ipynb"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
-<p>Convolution is defined as:</p>
+<p>Convolution of 2D finite elements is defined as:</p>
 <p><span class="math notranslate nohighlight">\((I * K)(i, j) = \sum_m \sum_n I(m, n) K(i - m, j - n)\)</span></p>
+<p>In practice, this means that we loop over each element of the input image and return the dot product of the kernel and the corresponding patch of image around the current pixel.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">ndimage</span><span class="p">,</span> <span class="n">signal</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">HTML</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
@@ -456,10 +458,28 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">smiley</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">draw_smiley</span><span class="p">()</span>
 <span class="n">kernel</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">draw_gaussian_kernel</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">output</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">smiley</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">kernel</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">smiley</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">kernel</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">output</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="n">output</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">smiley</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">kernel</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">j</span><span class="p">:</span><span class="n">j</span><span class="o">+</span><span class="n">kernel</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">*</span> <span class="n">kernel</span><span class="p">)</span>
+
+<span class="c1"># scipy.signal.correlate implements the convolution operation</span>
+<span class="c1"># you could also use scipy.ndimage.convolve, but this always uses padding (see below)</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">correlate</span><span class="p">(</span><span class="n">smiley</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;valid&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;inferno&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(np.float64(-0.5), np.float64(13.5), np.float64(13.5), np.float64(-0.5))
+</pre></div>
 </div>
+<img alt="../_images/adf43fc640e7b23de4557c3e1f37438cc2b0e1b6b1c7cd41487507a43643a3c6.png" src="../_images/adf43fc640e7b23de4557c3e1f37438cc2b0e1b6b1c7cd41487507a43643a3c6.png" />
+</div>
+</div>
+<p>Here is a nice animation that illustrates the algorithm:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">animation</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">animate_convolution</span><span class="p">(</span><span class="n">smiley</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mi">200</span><span class="p">);</span> <span class="n">HTML</span><span class="p">(</span><span class="n">animation</span><span class="o">.</span><span class="n">to_jshtml</span><span class="p">())</span>
@@ -652,42 +672,42 @@ input[type=range].anim-slider {
 </style>
 
 <div class="animation">
-  <img id="_anim_img4a4f0fcc213c430a8b967c3f2c74f461">
+  <img id="_anim_imgf36fd3f463c04f1ba733ac8193fee45d">
   <div class="anim-controls">
-    <input id="_anim_slider4a4f0fcc213c430a8b967c3f2c74f461" type="range" class="anim-slider"
+    <input id="_anim_sliderf36fd3f463c04f1ba733ac8193fee45d" type="range" class="anim-slider"
            name="points" min="0" max="1" step="1" value="0"
-           oninput="anim4a4f0fcc213c430a8b967c3f2c74f461.set_frame(parseInt(this.value));">
+           oninput="animf36fd3f463c04f1ba733ac8193fee45d.set_frame(parseInt(this.value));">
     <div class="anim-buttons">
-      <button title="Decrease speed" aria-label="Decrease speed" onclick="anim4a4f0fcc213c430a8b967c3f2c74f461.slower()">
+      <button title="Decrease speed" aria-label="Decrease speed" onclick="animf36fd3f463c04f1ba733ac8193fee45d.slower()">
           <i class="fa fa-minus"></i></button>
-      <button title="First frame" aria-label="First frame" onclick="anim4a4f0fcc213c430a8b967c3f2c74f461.first_frame()">
+      <button title="First frame" aria-label="First frame" onclick="animf36fd3f463c04f1ba733ac8193fee45d.first_frame()">
         <i class="fa fa-fast-backward"></i></button>
-      <button title="Previous frame" aria-label="Previous frame" onclick="anim4a4f0fcc213c430a8b967c3f2c74f461.previous_frame()">
+      <button title="Previous frame" aria-label="Previous frame" onclick="animf36fd3f463c04f1ba733ac8193fee45d.previous_frame()">
           <i class="fa fa-step-backward"></i></button>
-      <button title="Play backwards" aria-label="Play backwards" onclick="anim4a4f0fcc213c430a8b967c3f2c74f461.reverse_animation()">
+      <button title="Play backwards" aria-label="Play backwards" onclick="animf36fd3f463c04f1ba733ac8193fee45d.reverse_animation()">
           <i class="fa fa-play fa-flip-horizontal"></i></button>
-      <button title="Pause" aria-label="Pause" onclick="anim4a4f0fcc213c430a8b967c3f2c74f461.pause_animation()">
+      <button title="Pause" aria-label="Pause" onclick="animf36fd3f463c04f1ba733ac8193fee45d.pause_animation()">
           <i class="fa fa-pause"></i></button>
-      <button title="Play" aria-label="Play" onclick="anim4a4f0fcc213c430a8b967c3f2c74f461.play_animation()">
+      <button title="Play" aria-label="Play" onclick="animf36fd3f463c04f1ba733ac8193fee45d.play_animation()">
           <i class="fa fa-play"></i></button>
-      <button title="Next frame" aria-label="Next frame" onclick="anim4a4f0fcc213c430a8b967c3f2c74f461.next_frame()">
+      <button title="Next frame" aria-label="Next frame" onclick="animf36fd3f463c04f1ba733ac8193fee45d.next_frame()">
           <i class="fa fa-step-forward"></i></button>
-      <button title="Last frame" aria-label="Last frame" onclick="anim4a4f0fcc213c430a8b967c3f2c74f461.last_frame()">
+      <button title="Last frame" aria-label="Last frame" onclick="animf36fd3f463c04f1ba733ac8193fee45d.last_frame()">
           <i class="fa fa-fast-forward"></i></button>
-      <button title="Increase speed" aria-label="Increase speed" onclick="anim4a4f0fcc213c430a8b967c3f2c74f461.faster()">
+      <button title="Increase speed" aria-label="Increase speed" onclick="animf36fd3f463c04f1ba733ac8193fee45d.faster()">
           <i class="fa fa-plus"></i></button>
     </div>
-    <form title="Repetition mode" aria-label="Repetition mode" action="#n" name="_anim_loop_select4a4f0fcc213c430a8b967c3f2c74f461"
+    <form title="Repetition mode" aria-label="Repetition mode" action="#n" name="_anim_loop_selectf36fd3f463c04f1ba733ac8193fee45d"
           class="anim-state">
-      <input type="radio" name="state" value="once" id="_anim_radio1_4a4f0fcc213c430a8b967c3f2c74f461"
+      <input type="radio" name="state" value="once" id="_anim_radio1_f36fd3f463c04f1ba733ac8193fee45d"
              >
-      <label for="_anim_radio1_4a4f0fcc213c430a8b967c3f2c74f461">Once</label>
-      <input type="radio" name="state" value="loop" id="_anim_radio2_4a4f0fcc213c430a8b967c3f2c74f461"
+      <label for="_anim_radio1_f36fd3f463c04f1ba733ac8193fee45d">Once</label>
+      <input type="radio" name="state" value="loop" id="_anim_radio2_f36fd3f463c04f1ba733ac8193fee45d"
              checked>
-      <label for="_anim_radio2_4a4f0fcc213c430a8b967c3f2c74f461">Loop</label>
-      <input type="radio" name="state" value="reflect" id="_anim_radio3_4a4f0fcc213c430a8b967c3f2c74f461"
+      <label for="_anim_radio2_f36fd3f463c04f1ba733ac8193fee45d">Loop</label>
+      <input type="radio" name="state" value="reflect" id="_anim_radio3_f36fd3f463c04f1ba733ac8193fee45d"
              >
-      <label for="_anim_radio3_4a4f0fcc213c430a8b967c3f2c74f461">Reflect</label>
+      <label for="_anim_radio3_f36fd3f463c04f1ba733ac8193fee45d">Reflect</label>
     </form>
   </div>
 </div>
@@ -697,9 +717,9 @@ input[type=range].anim-slider {
   /* Instantiate the Animation class. */
   /* The IDs given should match those used in the template above. */
   (function() {
-    var img_id = "_anim_img4a4f0fcc213c430a8b967c3f2c74f461";
-    var slider_id = "_anim_slider4a4f0fcc213c430a8b967c3f2c74f461";
-    var loop_select_id = "_anim_loop_select4a4f0fcc213c430a8b967c3f2c74f461";
+    var img_id = "_anim_imgf36fd3f463c04f1ba733ac8193fee45d";
+    var slider_id = "_anim_sliderf36fd3f463c04f1ba733ac8193fee45d";
+    var loop_select_id = "_anim_loop_selectf36fd3f463c04f1ba733ac8193fee45d";
     var frames = new Array(196);
     
   frames[0] = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAArwAAADkCAYAAAB6+PfwAAAAOnRFWHRTb2Z0d2FyZQBNYXRwbG90\
@@ -37039,7 +37059,7 @@ AvjDRsVkAAAAAElFTkSuQmCC\
     /* set a timeout to make sure all the above elements are created before
        the object is initialized. */
     setTimeout(function() {
-        anim4a4f0fcc213c430a8b967c3f2c74f461 = new Animation(frames, img_id, slider_id, 200.0,
+        animf36fd3f463c04f1ba733ac8193fee45d = new Animation(frames, img_id, slider_id, 200.0,
                                  loop_select_id);
     }, 0);
   })()
@@ -37059,10 +37079,26 @@ AvjDRsVkAAAAAElFTkSuQmCC\
 <img alt="../_images/bee006605449e19a42cf957c3bb265a94cef9d97fffd1d5b2625903c345639f6.png" src="../_images/bee006605449e19a42cf957c3bb265a94cef9d97fffd1d5b2625903c345639f6.png" />
 </div>
 </div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># this is equivalent to:</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">ndimage</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">smiley</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span> <span class="n">cval</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>  <span class="c1"># with zero padding</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;inferno&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(np.float64(-0.5), np.float64(15.5), np.float64(15.5), np.float64(-0.5))
+</pre></div>
+</div>
+<img alt="../_images/92f8e6efdeb71ec1ba50d33ea547dad195004a8d10c1ed13afb717cd47898757.png" src="../_images/92f8e6efdeb71ec1ba50d33ea547dad195004a8d10c1ed13afb717cd47898757.png" />
+</div>
+</div>
 </section>
 <section id="padding-mode-reflect">
 <h2>Padding mode <code class="docutils literal notranslate"><span class="pre">reflect</span></code><a class="headerlink" href="#padding-mode-reflect" title="Link to this heading">#</a></h2>
-<p>often causes less artefacts</p>
+<p>Reflects the input at the edge. Sometimes causes less artefacts when used in CNNs.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">padded_smiley</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">smiley</span><span class="p">,</span> <span class="n">pad_width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;reflect&#39;</span><span class="p">);</span> <span class="n">_</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">plot_input_kernel_output</span><span class="p">(</span><span class="n">padded_smiley</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">titles</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Padded Input Image&quot;</span><span class="p">,</span> <span class="s2">&quot;Kernel&quot;</span><span class="p">,</span> <span class="s2">&quot;Convolved Map&quot;</span><span class="p">))</span>
@@ -37075,14 +37111,38 @@ AvjDRsVkAAAAAElFTkSuQmCC\
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">padded_smiley</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">smiley</span><span class="p">,</span> <span class="n">pad_width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;constant&quot;</span><span class="p">,</span> <span class="n">constant_values</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">padded_smiley</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">smiley</span><span class="p">,</span> <span class="n">pad_width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;edge&quot;</span><span class="p">);</span> <span class="n">_</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">plot_input_kernel_output</span><span class="p">(</span><span class="n">padded_smiley</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">titles</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Padded Input Image&quot;</span><span class="p">,</span> <span class="s2">&quot;Kernel&quot;</span><span class="p">,</span> <span class="s2">&quot;Convolved Map&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/1214ed417b9aaf18ca5197f8847f23579455816f7a9d34555c61987efc690c96.png" src="../_images/1214ed417b9aaf18ca5197f8847f23579455816f7a9d34555c61987efc690c96.png" />
 </div>
 </div>
 </section>
 <section id="stride-determines-how-far-the-kernel-moves-between-iterations">
 <h2>Stride determines how far the kernel moves between iterations<a class="headerlink" href="#stride-determines-how-far-the-kernel-moves-between-iterations" title="Link to this heading">#</a></h2>
+<p>A stride of 2 processes only every other pixel (in both x and y dimensions). Therefore, the output has only half the size in each dimension (a quarter of the total number of pixels).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># for loops with stride</span>
+<span class="n">stride</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span> <span class="p">(</span><span class="n">smiley</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">kernel</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">//</span> <span class="n">stride</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="n">smiley</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">kernel</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">//</span> <span class="n">stride</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">output</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">output</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+        <span class="n">output</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">smiley</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">stride</span><span class="p">:</span><span class="n">i</span><span class="o">*</span><span class="n">stride</span><span class="o">+</span><span class="n">kernel</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">j</span><span class="o">*</span><span class="n">stride</span><span class="p">:</span><span class="n">j</span><span class="o">*</span><span class="n">stride</span><span class="o">+</span><span class="n">kernel</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">*</span> <span class="n">kernel</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;inferno&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(np.float64(-0.5), np.float64(6.5), np.float64(6.5), np.float64(-0.5))
+</pre></div>
+</div>
+<img alt="../_images/60e38828e550a1343e4852d8ee4a1f92c0f16d2327a4f7521ded714827e2e952.png" src="../_images/60e38828e550a1343e4852d8ee4a1f92c0f16d2327a4f7521ded714827e2e952.png" />
+</div>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">animation</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">animate_convolution</span><span class="p">(</span><span class="n">padded_smiley</span><span class="p">,</span> <span class="n">utils</span><span class="o">.</span><span class="n">draw_sobel_kernel</span><span class="p">(),</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
@@ -47571,8 +47631,8 @@ fTpnbgYwo58AAAAASUVORK5CYII=\
 </div>
 </div>
 </section>
-<section id="the-receptive-field-limits-the-amount-of-context-a-cnn-can-learn">
-<h2>The receptive field limits the amount of context a CNN can learn<a class="headerlink" href="#the-receptive-field-limits-the-amount-of-context-a-cnn-can-learn" title="Link to this heading">#</a></h2>
+<section id="the-perceptive-field-limits-the-amount-of-context-a-cnn-can-learn">
+<h2>The perceptive field limits the amount of context a CNN can learn<a class="headerlink" href="#the-perceptive-field-limits-the-amount-of-context-a-cnn-can-learn" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">utils</span><span class="o">.</span><span class="n">plot_perceptive_field</span><span class="p">(</span><span class="n">smiley</span><span class="p">,</span> <span class="n">kernel_layers</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">kernel_sizes</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
@@ -47584,8 +47644,8 @@ fTpnbgYwo58AAAAASUVORK5CYII=\
 </div>
 </div>
 </section>
-<section id="receptive-fields-of-consecutive-layers-stack-up">
-<h2>Receptive fields of consecutive layers stack up<a class="headerlink" href="#receptive-fields-of-consecutive-layers-stack-up" title="Link to this heading">#</a></h2>
+<section id="perceptive-fields-of-consecutive-layers-stack-up">
+<h2>Perceptive fields of consecutive layers stack up<a class="headerlink" href="#perceptive-fields-of-consecutive-layers-stack-up" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">utils</span><span class="o">.</span><span class="n">plot_perceptive_field</span><span class="p">(</span><span class="n">smiley</span><span class="p">,</span> <span class="n">kernel_layers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">kernel_sizes</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,))</span>
@@ -47703,8 +47763,8 @@ fTpnbgYwo58AAAAASUVORK5CYII=\
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#padding-mode-reflect">Padding mode <code class="docutils literal notranslate"><span class="pre">reflect</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stride-determines-how-far-the-kernel-moves-between-iterations">Stride determines how far the kernel moves between iterations</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#n-kernels-create-n-feature-maps"><span class="math notranslate nohighlight">\(n\)</span> kernels create <span class="math notranslate nohighlight">\(n\)</span> feature maps</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-receptive-field-limits-the-amount-of-context-a-cnn-can-learn">The receptive field limits the amount of context a CNN can learn</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#receptive-fields-of-consecutive-layers-stack-up">Receptive fields of consecutive layers stack up</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-perceptive-field-limits-the-amount-of-context-a-cnn-can-learn">The perceptive field limits the amount of context a CNN can learn</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#perceptive-fields-of-consecutive-layers-stack-up">Perceptive fields of consecutive layers stack up</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-3x3-layers-is-more-parameter-efficient-than-increasing-kernel-size">Adding 3x3 layers is more parameter efficient than increasing kernel size</a></li>
 </ul>
   </nav></div>
