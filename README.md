@@ -56,5 +56,4 @@ The U-Net exercise uses BBBC039. The notebook downloads a small subset automatic
 
 ## License and attribution
 
-- Slides and notebooks: CC-BY 4.0 (update as needed)
-- Code examples: MIT (update as needed)
+- Apache 2.0
