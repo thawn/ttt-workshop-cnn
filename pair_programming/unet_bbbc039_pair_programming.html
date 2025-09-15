@@ -601,10 +601,10 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Model, loss, optimizer</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">UNet</span><span class="p">()</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">UNet</span><span class="p">()</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">&#39;cpu&#39;</span><span class="p">)</span>
 <span class="n">opt</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
 <span class="n">criterion</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">BCEWithLogitsLoss</span><span class="p">()</span>
-<span class="n">summary</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">))</span>
+<span class="n">summary</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">),</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cpu&#39;</span><span class="p">)</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -675,14 +675,17 @@ Estimated Total Size (MB): 36.88
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 1:   0%|          | 0/40 [00:00&lt;?, ?it/s]/var/folders/8s/7jr95f1d28vflnwm1cfqv7t40000gr/T/ipykernel_72459/1559950389.py:12: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 1:   0%|          | 0/40 [00:00&lt;?, ?it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/8s/7jr95f1d28vflnwm1cfqv7t40000gr/T/ipykernel_73280/1559950389.py:12: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
 Consider using tensor.detach() first. (Triggered internally at /Users/runner/work/pytorch/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
   pbar.set_postfix(loss=float(loss))
-Epoch 1: 100%|██████████| 40/40 [00:02&lt;00:00, 18.22it/s, loss=0.179]
-Epoch 2: 100%|██████████| 40/40 [00:01&lt;00:00, 21.56it/s, loss=0.113] 
-Epoch 3: 100%|██████████| 40/40 [00:01&lt;00:00, 22.20it/s, loss=0.101] 
-Epoch 4: 100%|██████████| 40/40 [00:01&lt;00:00, 22.28it/s, loss=0.0889]
-Epoch 5: 100%|██████████| 40/40 [00:01&lt;00:00, 22.67it/s, loss=0.0668]
+Epoch 1: 100%|██████████| 40/40 [00:02&lt;00:00, 17.64it/s, loss=0.179]
+Epoch 2: 100%|██████████| 40/40 [00:01&lt;00:00, 22.46it/s, loss=0.113] 
+Epoch 3: 100%|██████████| 40/40 [00:01&lt;00:00, 22.86it/s, loss=0.101] 
+Epoch 4: 100%|██████████| 40/40 [00:01&lt;00:00, 23.02it/s, loss=0.0889]
+Epoch 5: 100%|██████████| 40/40 [00:01&lt;00:00, 23.10it/s, loss=0.0668]
 </pre></div>
 </div>
 </div>
@@ -717,7 +720,7 @@ Epoch 5: 100%|██████████| 40/40 [00:01&lt;00:00, 22.67it/s, 
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Testing: 100%|██████████| 5/5 [00:00&lt;00:00, 22.62it/s]
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Testing: 100%|██████████| 5/5 [00:00&lt;00:00, 21.55it/s]
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Mean IoU on test set: 0.8977
