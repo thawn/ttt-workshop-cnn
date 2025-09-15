@@ -1,14 +1,14 @@
 format: jb-book
 root: intro
 parts:
-  - caption: Under the hood of CNNs
+  - caption: Under the hood of CNNs (flipped classroom)
     chapters:
-      - file: slides/flipped_classroom
-      - file: exercises/manual_convolution
-      - file: exercises/conv_gaussian_filter
-  - caption: U-Net
+      - file: flipped_classroom/README
+      - file: flipped_classroom/CNN_under_the_hood
+      - file: flipped_classroom/ex_manual_convolution
+      - file: flipped_classroom/ex_conv_gaussian_filter
+  - caption: U-Net (pair programming)
     chapters:
-      - file: self_teach/unet_concepts
-      - file: exercises/unet_bbbc039_pair_programming
-      - file: self_teach/hyperparameters
-      - file: exercises/optuna_tuning
+      - file: pair_programming/README
+      - file: pair_programming/unet_bbbc039_pair_programming
+      - file: pair_programming/optuna_tuning
