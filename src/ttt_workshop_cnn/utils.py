@@ -460,7 +460,7 @@ def plot_three_kernels(
     return fig, axs
 
 
-def plot_perceptive_field(
+def plot_receptive_field(
     image: np.ndarray, kernel_layers: int = 2, kernel_sizes: Tuple[int] = (3, 5)
 ) -> Tuple[plt.Figure, Iterable[plt.Axes]]:
 
@@ -484,26 +484,26 @@ def plot_perceptive_field(
         y_pad += pad + offset
         x_pad = -0.5 + pad + offset
         for n in range(kernel_layers):
-            perceptive_field = (kernel_size - 1) * (kernel_layers - n + 1) + 1
+            receptive_field = (kernel_size - 1) * (kernel_layers - n + 1) + 1
             x_pad -= n
             y_pad -= n
             if n < 1:
-                perceptive_field -= kernel_size - 1
+                receptive_field -= kernel_size - 1
                 rect_ax = f"image"
-                x_pos = image.shape[1] // 2 - perceptive_field / 2
-                y_pos = y_pad - (perceptive_field - kernel_size) // 2 + i * kernel_size
-                annotation = "Perceptive Field"
+                x_pos = image.shape[1] // 2 - receptive_field / 2
+                y_pos = y_pad - (receptive_field - kernel_size) // 2 + i * kernel_size
+                annotation = "Receptive Field"
             else:
-                x_pos = kernel_size / 2 - perceptive_field / 2 - 0.5
-                y_pos = kernel_size / 2 - perceptive_field / 2 - 0.5
+                x_pos = kernel_size / 2 - receptive_field / 2 - 0.5
+                y_pos = kernel_size / 2 - receptive_field / 2 - 0.5
                 rect_ax = f"kernel{kernel_size}_{n-1}"
             kernel = draw_gaussian_kernel(size=kernel_size, sigma=1)
             axs[f"kernel{kernel_size}_{n}"].imshow(kernel, cmap="inferno")
             add_axis_grid(axs[f"kernel{kernel_size}_{n}"], pad=pad, offset=offset)
             rect = plt.Rectangle(
                 (x_pos, y_pos),
-                perceptive_field,
-                perceptive_field,
+                receptive_field,
+                receptive_field,
                 linewidth=2,
                 edgecolor="cyan",
                 facecolor="none",
@@ -511,8 +511,8 @@ def plot_perceptive_field(
             axs[rect_ax].add_patch(rect)
             text = axs[rect_ax].annotate(
                 annotation,
-                xy=(x_pos + perceptive_field / 2, y_pos),
-                xytext=(x_pos + perceptive_field / 2, y_pos - 0.2),
+                xy=(x_pos + receptive_field / 2, y_pos),
+                xytext=(x_pos + receptive_field / 2, y_pos - 0.2),
                 color="cyan",
                 fontsize=12,
                 ha="center",
@@ -523,7 +523,7 @@ def plot_perceptive_field(
 
     fig.tight_layout(pad=0.0)
     fig.savefig(
-        output_path / f"perceptive_field_layers{kernel_layers}_kernel_sizes{kernel_sizes}.svg",
+        output_path / f"receptive_field_layers{kernel_layers}_kernel_sizes{kernel_sizes}.svg",
         format="svg",
         bbox_inches="tight",
     )
