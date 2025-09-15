@@ -25,6 +25,7 @@ book/_build/
 # OS/files
 .DS_Store
 Thumbs.db
+__MACOSX/
 
 # Logs
 *.log
@@ -42,3 +43,6 @@ old_material/
 *.avi
 *.png
 *.svg
+
+# data
+data/
