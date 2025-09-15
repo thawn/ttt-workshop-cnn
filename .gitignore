@@ -47,3 +47,6 @@ output/
 
 # data
 data/
+
+# solutions
+*_solution.ipynb
