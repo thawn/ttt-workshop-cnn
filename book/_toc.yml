@@ -1,6 +1,9 @@
 format: jb-book
 root: intro
 parts:
+  - caption: Introduction to CNNs (classic lecture)
+    chapters:
+      - file: slides/README
   - caption: Under the hood of CNNs (flipped classroom)
     chapters:
       - file: flipped_classroom/README
