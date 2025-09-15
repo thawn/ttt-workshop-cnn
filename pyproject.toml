@@ -27,6 +27,11 @@ dependencies = [
   "ipympl",
   "ipywidgets",
   "scikit-image",
+  "scikit-learn",
+  "torch",
+  "torchinfo",
+  "optuna",
+  "plotly",
   "tqdm",
 
   # Deep learning + experimentation
