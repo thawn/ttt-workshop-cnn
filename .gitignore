@@ -39,11 +39,6 @@ old_material/
 
 # generated media
 output/
-*.mp4
-*.gif
-*.avi
-*.png
-*.svg
 
 # data
 data/
