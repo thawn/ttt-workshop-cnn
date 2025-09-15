@@ -38,6 +38,7 @@ __MACOSX/
 old_material/
 
 # generated media
+output/
 *.mp4
 *.gif
 *.avi
