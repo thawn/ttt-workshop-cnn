@@ -416,6 +416,7 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#we-train-a-small-u-net-on-the-bbbc039-dataset">We train a small U-Net on the BBBC039 dataset</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise">Exercise:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coding-challenge">Coding challenge:</a></li>
 </ul>
@@ -432,7 +433,10 @@ document.write(`
   <section class="tex2jax_ignore mathjax_ignore" id="pair-programming-u-net-for-nuclei-segmentation-bbbc039">
 <h1>Pair Programming: U-Net for Nuclei Segmentation (BBBC039)<a class="headerlink" href="#pair-programming-u-net-for-nuclei-segmentation-bbbc039" title="Link to this heading">#</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com/github/thawn/ttt-workshop-cnn/blob/main/book/pair_programming/unet_bbbc039_pair_programming.ipynb"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
-<p>We train a small U-Net on a tiny subset of BBBC039 for speed.</p>
+<p>Note: this notebook requires a GPU. Please switch to T4 GPU using the drop down menu in the top right of the colab interface:</p>
+<img src="assets/change_runtime.png" alt="switch to GPU" width="350"/>
+<section id="we-train-a-small-u-net-on-the-bbbc039-dataset">
+<h2>We train a small U-Net on the BBBC039 dataset<a class="headerlink" href="#we-train-a-small-u-net-on-the-bbbc039-dataset" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Dependency management</span>
@@ -466,7 +470,7 @@ document.write(`
 
 <span class="c1"># set device</span>
 <span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span>
-<span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;mps&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">mps</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="n">device</span>
+<span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;mps&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">mps</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="n">device</span> <span class="c1">## Mac OS metal</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using device: </span><span class="si">{</span><span class="n">device</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -678,14 +682,14 @@ Estimated Total Size (MB): 36.88
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 1:   0%|          | 0/40 [00:00&lt;?, ?it/s]
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/8s/7jr95f1d28vflnwm1cfqv7t40000gr/T/ipykernel_73280/1559950389.py:12: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/8s/7jr95f1d28vflnwm1cfqv7t40000gr/T/ipykernel_75200/1559950389.py:12: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
 Consider using tensor.detach() first. (Triggered internally at /Users/runner/work/pytorch/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
   pbar.set_postfix(loss=float(loss))
-Epoch 1: 100%|██████████| 40/40 [00:02&lt;00:00, 17.64it/s, loss=0.179]
-Epoch 2: 100%|██████████| 40/40 [00:01&lt;00:00, 22.46it/s, loss=0.113] 
-Epoch 3: 100%|██████████| 40/40 [00:01&lt;00:00, 22.86it/s, loss=0.101] 
-Epoch 4: 100%|██████████| 40/40 [00:01&lt;00:00, 23.02it/s, loss=0.0889]
-Epoch 5: 100%|██████████| 40/40 [00:01&lt;00:00, 23.10it/s, loss=0.0668]
+Epoch 1: 100%|██████████| 40/40 [00:02&lt;00:00, 19.00it/s, loss=0.179]
+Epoch 2: 100%|██████████| 40/40 [00:01&lt;00:00, 21.50it/s, loss=0.113] 
+Epoch 3: 100%|██████████| 40/40 [00:01&lt;00:00, 23.44it/s, loss=0.101] 
+Epoch 4: 100%|██████████| 40/40 [00:01&lt;00:00, 23.27it/s, loss=0.0889]
+Epoch 5: 100%|██████████| 40/40 [00:01&lt;00:00, 23.69it/s, loss=0.0668]
 </pre></div>
 </div>
 </div>
@@ -720,7 +724,7 @@ Epoch 5: 100%|██████████| 40/40 [00:01&lt;00:00, 23.10it/s, 
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Testing: 100%|██████████| 5/5 [00:00&lt;00:00, 21.55it/s]
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Testing: 100%|██████████| 5/5 [00:00&lt;00:00, 21.01it/s]
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Mean IoU on test set: 0.8977
@@ -732,6 +736,7 @@ Epoch 5: 100%|██████████| 40/40 [00:01&lt;00:00, 23.10it/s, 
 <img alt="../_images/1e9177a4207bbe1983895f62fbeb3f5dd8b700d6920d48d8cbdf8d3d9b32e53c.png" src="../_images/1e9177a4207bbe1983895f62fbeb3f5dd8b700d6920d48d8cbdf8d3d9b32e53c.png" />
 </div>
 </div>
+</section>
 <section id="exercise">
 <h2>Exercise:<a class="headerlink" href="#exercise" title="Link to this heading">#</a></h2>
 <p>Change the UNet class to make number of features in the first conv layer (currently 16) a tunable parameter</p>
@@ -808,6 +813,7 @@ Epoch 5: 100%|██████████| 40/40 [00:01&lt;00:00, 23.10it/s, 
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#we-train-a-small-u-net-on-the-bbbc039-dataset">We train a small U-Net on the BBBC039 dataset</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise">Exercise:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coding-challenge">Coding challenge:</a></li>
 </ul>
