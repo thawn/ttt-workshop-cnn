@@ -2,6 +2,18 @@
 
 This repo contains a Jupyter Book with notebooks runnable in Google Colab. Use the Open in Colab badges at the top of each notebook.
 
+## Purpose
+
+The purpose of this repo is twofold:
+
+* A hands-on workshop to teach how convolutional neural networks (CNNs) work under the hood, and how to train them for image segmentation tasks.
+* A comprehensive set of materials for instructors to use in their own teaching, giving examples of classical lecture slides, flipped classroom lessons, and pair programming exercises.
+
+## Prerequisites
+
+* Basic Python experience, including Jupyter notebooks.
+* Basic machine learning experience is helpful but not required.
+
 ## Setup (local)
 
 Requires Python 3.9+ (recommended: a virtual environment).
@@ -27,14 +39,6 @@ Notes
 - Torch CPU wheels are installed by default. GPU acceleration may require a different wheel/index per your platform—see PyTorch.org for instructions.
 - After installing the dev extra, you can run tests with `pytest`.
 
-
-## Structure
-
-- `book/_config.yml` and `book/_toc.yml`: Jupyter Book configuration and table of contents
-- `book/intro.ipynb`: Course home and navigation
-- `book/slides/lecture_slides.ipynb`: 20-min slide deck (RISE-compatible in Colab)
-- `book/exercises/*`: Hands-on exercises
-- `book/self_teach/*`: Self-teaching notebooks
 
 ## Run notebooks in Google Colab
 
