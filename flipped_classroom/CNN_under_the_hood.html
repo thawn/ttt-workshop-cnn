@@ -47708,6 +47708,9 @@ E14AAACglrL/cRcAAACoAAkvAAAAvEbCCwAAAK+R8AIAAMBrJLwAAADwGgkvAAAAvEbCCwAAAK+R\
 </section>
 <section id="n-kernels-create-n-feature-maps">
 <h2><span class="math notranslate nohighlight">\(n\)</span> kernels create <span class="math notranslate nohighlight">\(n\)</span> feature maps<a class="headerlink" href="#n-kernels-create-n-feature-maps" title="Link to this heading">#</a></h2>
+<p>A kernel is almost never used alone in a CNN. Instead, multiple kernels are used in parallel to create multiple feature maps. The number of kernels is also called the number of output channels.</p>
+<p>This enables the network to learn multiple features in parallel. For example, one kernel could learn to denoise the image (Gaussian), another kernel could detect edges (Laplacian), and a third kernel could detect horizontal edges (Sobel).</p>
+<p>Inn a CNN, the kernels are learned during training. The kernels are initialized randomly and then updated using backpropagation.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">plot_three_kernels</span><span class="p">(</span><span class="n">smiley</span><span class="p">,</span> <span class="p">[</span><span class="n">kernel</span><span class="p">,</span> <span class="n">utils</span><span class="o">.</span><span class="n">draw_laplacian_kernel</span><span class="p">(),</span> <span class="n">utils</span><span class="o">.</span><span class="n">draw_sobel_kernel</span><span class="p">()])</span>
@@ -47775,7 +47778,7 @@ E14AAACglrL/cRcAAACoAAkvAAAAvEbCCwAAAK+R8AIAAMBrJLwAAADwGgkvAAAAvEbCCwAAAK+R\
 <td><p><span class="math notranslate nohighlight">\(7^2 = 49\)</span> parameters</p></td>
 <td><p><span class="math notranslate nohighlight">\(3 \cdot 3^2 = 27\)</span> parameters</p></td>
 </tr>
-<tr class="row-even"><td><p><strong>scales</strong></p></td>
+<tr class="row-even"><td><p><strong>scaling:</strong></p></td>
 <td><p><strong>quadratic</strong></p></td>
 <td><p><strong>linear</strong></p></td>
 </tr>
