@@ -490,7 +490,7 @@ document.write(`
 <span class="n">mask_URL</span> <span class="o">=</span> <span class="s2">&quot;https://data.broadinstitute.org/bbbc/BBBC039/masks.zip&quot;</span>
 <span class="n">urls</span> <span class="o">=</span> <span class="p">[</span><span class="n">image_URL</span><span class="p">,</span> <span class="n">mask_URL</span><span class="p">]</span>
 <span class="n">data_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
-<span class="n">mask_path</span> <span class="o">=</span> <span class="n">data_path</span> <span class="o">/</span> <span class="s1">&#39;masks&#39;</span>
+<span class="n">label_path</span> <span class="o">=</span> <span class="n">data_path</span> <span class="o">/</span> <span class="s1">&#39;masks&#39;</span>
 <span class="n">image_path</span> <span class="o">=</span> <span class="n">data_path</span> <span class="o">/</span> <span class="s1">&#39;images&#39;</span>
 <span class="n">data_path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">zip_paths</span> <span class="o">=</span> <span class="p">[</span><span class="n">data_path</span> <span class="o">/</span> <span class="s1">&#39;images.zip&#39;</span><span class="p">,</span> <span class="n">data_path</span> <span class="o">/</span> <span class="s1">&#39;masks.zip&#39;</span><span class="p">]</span>
@@ -502,7 +502,7 @@ document.write(`
             <span class="nb">open</span><span class="p">(</span><span class="n">zip_path</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
 <span class="k">if</span> <span class="ow">not</span> <span class="n">image_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
     <span class="k">with</span> <span class="n">ZipFile</span><span class="p">(</span><span class="n">data_path</span> <span class="o">/</span> <span class="s1">&#39;images.zip&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">z</span><span class="p">:</span> <span class="n">z</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="n">data_path</span><span class="p">)</span>
-<span class="k">if</span> <span class="ow">not</span> <span class="n">mask_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">label_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
     <span class="k">with</span> <span class="n">ZipFile</span><span class="p">(</span><span class="n">data_path</span> <span class="o">/</span> <span class="s1">&#39;masks.zip&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">z</span><span class="p">:</span> <span class="n">z</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="n">data_path</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -514,8 +514,8 @@ document.write(`
 <span class="k">class</span><span class="w"> </span><span class="nc">Nuclei</span><span class="p">(</span><span class="n">Dataset</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="n">data_path</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">128</span><span class="p">):</span>
         <span class="n">images</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">((</span><span class="n">root</span><span class="o">/</span><span class="s1">&#39;images&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*.tif&#39;</span><span class="p">))</span>
-        <span class="n">masks</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">((</span><span class="n">root</span><span class="o">/</span><span class="s1">&#39;masks&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*.png&#39;</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pairs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">images</span><span class="p">,</span> <span class="n">masks</span><span class="p">))</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">((</span><span class="n">root</span><span class="o">/</span><span class="s1">&#39;masks&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*.png&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pairs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">images</span><span class="p">,</span> <span class="n">labels</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pairs</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
@@ -577,7 +577,7 @@ document.write(`
     <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
     <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
     <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Image&#39;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Mask&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Label&#39;</span><span class="p">)</span>
     <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
     <span class="n">ax</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="mi">2</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
@@ -585,7 +585,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/833231873250bb12b470b7df53df287ed680c2be0ddb4156744aaed434167070.png" src="../_images/833231873250bb12b470b7df53df287ed680c2be0ddb4156744aaed434167070.png" />
+<img alt="../_images/69c6262cf3ca5a45544942b7a536ee34900ca1e92851acdbf2770909151b7332.png" src="../_images/69c6262cf3ca5a45544942b7a536ee34900ca1e92851acdbf2770909151b7332.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -679,17 +679,14 @@ Estimated Total Size (MB): 36.88
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 1:   0%|          | 0/40 [00:00&lt;?, ?it/s]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/8s/7jr95f1d28vflnwm1cfqv7t40000gr/T/ipykernel_75200/1559950389.py:12: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 1:   0%|          | 0/40 [00:00&lt;?, ?it/s]/var/folders/8s/7jr95f1d28vflnwm1cfqv7t40000gr/T/ipykernel_64502/1559950389.py:12: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
 Consider using tensor.detach() first. (Triggered internally at /Users/runner/work/pytorch/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
   pbar.set_postfix(loss=float(loss))
-Epoch 1: 100%|██████████| 40/40 [00:02&lt;00:00, 19.00it/s, loss=0.179]
-Epoch 2: 100%|██████████| 40/40 [00:01&lt;00:00, 21.50it/s, loss=0.113] 
-Epoch 3: 100%|██████████| 40/40 [00:01&lt;00:00, 23.44it/s, loss=0.101] 
-Epoch 4: 100%|██████████| 40/40 [00:01&lt;00:00, 23.27it/s, loss=0.0889]
-Epoch 5: 100%|██████████| 40/40 [00:01&lt;00:00, 23.69it/s, loss=0.0668]
+Epoch 1: 100%|██████████| 40/40 [00:03&lt;00:00, 12.59it/s, loss=0.179]
+Epoch 2: 100%|██████████| 40/40 [00:02&lt;00:00, 15.40it/s, loss=0.113] 
+Epoch 3: 100%|██████████| 40/40 [00:02&lt;00:00, 15.20it/s, loss=0.101] 
+Epoch 4: 100%|██████████| 40/40 [00:02&lt;00:00, 15.64it/s, loss=0.0889]
+Epoch 5: 100%|██████████| 40/40 [00:02&lt;00:00, 15.18it/s, loss=0.0668]
 </pre></div>
 </div>
 </div>
@@ -708,15 +705,15 @@ Epoch 5: 100%|██████████| 40/40 [00:01&lt;00:00, 23.69it/s, 
         <span class="n">union</span> <span class="o">=</span> <span class="p">((</span><span class="n">preds</span> <span class="o">+</span> <span class="n">y</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
         <span class="n">iou</span> <span class="o">=</span> <span class="p">(</span><span class="n">intersection</span> <span class="o">+</span> <span class="mf">1e-6</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">union</span> <span class="o">+</span> <span class="mf">1e-6</span><span class="p">)</span>
         <span class="n">ious</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">iou</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Mean IoU on test set: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">ious</span><span class="p">)</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Mean intersection over union on test set: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">ious</span><span class="p">)</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="c1"># Visualize some predictions</span>
 <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">))</span>
 <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">(),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Input&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">(),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;GT&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Label&quot;</span><span class="p">)</span>
 <span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">preds</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">(),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">)</span>
-<span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Pred&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Prediction&quot;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">ax</span><span class="p">:</span>
     <span class="n">a</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
@@ -724,16 +721,13 @@ Epoch 5: 100%|██████████| 40/40 [00:01&lt;00:00, 23.69it/s, 
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Testing: 100%|██████████| 5/5 [00:00&lt;00:00, 21.01it/s]
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Testing: 100%|██████████| 5/5 [00:00&lt;00:00, 16.13it/s]
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Mean IoU on test set: 0.8977
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Mean intersection over union on test set: 0.8977
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
-<img alt="../_images/1e9177a4207bbe1983895f62fbeb3f5dd8b700d6920d48d8cbdf8d3d9b32e53c.png" src="../_images/1e9177a4207bbe1983895f62fbeb3f5dd8b700d6920d48d8cbdf8d3d9b32e53c.png" />
+<img alt="../_images/52cef5da0e5e9519c88d1a9fda8c050fd9d2b280890a7f8fd5d11b1018a9cac8.png" src="../_images/52cef5da0e5e9519c88d1a9fda8c050fd9d2b280890a7f8fd5d11b1018a9cac8.png" />
 </div>
 </div>
 </section>
