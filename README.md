@@ -40,15 +40,15 @@ jupyter-book build book/
 ```
 
 Notes
-- Torch CPU wheels are installed by default. GPU acceleration may require a different wheel/index per your platform—see PyTorch.org for instructions.
-- After installing the dev extra, you can run tests with `pytest`.
 
+* Torch CPU wheels are installed by default. GPU acceleration may require a different wheel/index per your platform—see PyTorch.org for instructions.
+* After installing the dev extra, you can run tests with `pytest`.
 
 ## Run notebooks in Google Colab
 
-- Click the badge at the top of a notebook to open it in Colab.
-- In Colab, set Runtime -> Change runtime type -> T4 GPU (optional for U-Net training).
-- First cell installs dependencies for that notebook.
+* Click the badge at the top of a notebook to open it in Colab.
+* In Colab, set Runtime -> Change runtime type -> T4 GPU (optional for U-Net training).
+* First cell installs dependencies for that notebook.
 
 ## Preview the built site locally (optional)
 
@@ -64,4 +64,4 @@ The U-Net exercise uses BBBC039. The notebook downloads a small subset automatic
 
 ## License and attribution
 
-- Apache 2.0
+* Apache 2.0
