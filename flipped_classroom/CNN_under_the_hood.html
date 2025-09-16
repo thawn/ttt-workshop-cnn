@@ -418,9 +418,12 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#padding-keeps-input-and-output-dimensions-identical">Padding keeps input and output dimensions identical</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#padding-mode-reflect">Padding mode <code class="docutils literal notranslate"><span class="pre">reflect</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#padding-mode-edge">Padding mode <code class="docutils literal notranslate"><span class="pre">edge</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#padding-keeps-input-and-output-dimensions-identical">Padding keeps input and output dimensions identical</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#padding-mode-constant">Padding mode <code class="docutils literal notranslate"><span class="pre">constant</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#padding-mode-reflect">Padding mode <code class="docutils literal notranslate"><span class="pre">reflect</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#padding-mode-edge">Padding mode <code class="docutils literal notranslate"><span class="pre">edge</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stride-determines-how-far-the-kernel-moves-between-iterations">Stride determines how far the kernel moves between iterations</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#n-kernels-create-n-feature-maps"><span class="math notranslate nohighlight">\(n\)</span> kernels create <span class="math notranslate nohighlight">\(n\)</span> feature maps</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-receptive-field-limits-the-amount-of-context-a-cnn-can-learn">The receptive field limits the amount of context a CNN can learn</a></li>
@@ -443,6 +446,11 @@ document.write(`
 <p>Convolution of 2D finite elements is defined as:</p>
 <p><span class="math notranslate nohighlight">\((I * K)(i, j) = \sum_m \sum_n I(m, n) K(i - m, j - n)\)</span></p>
 <p>In practice, this means that we loop over each element of the input image and return the dot product of the kernel and the corresponding patch of image around the current pixel.</p>
+<p>In pytorch, this is implemented in <code class="docutils literal notranslate"><span class="pre">torch.nn.Conv2d</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">conv</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The kernel size determines the size of the patch of image that is used to compute the dot product. In this case, the kernel size is 3, so the patch of image is 3x3.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -37070,6 +37078,29 @@ AvjDRsVkAAAAAElFTkSuQmCC\
 <p>Note how the output is smaller than the input. This can be avoided using padding</p>
 <section id="padding-keeps-input-and-output-dimensions-identical">
 <h2>Padding keeps input and output dimensions identical<a class="headerlink" href="#padding-keeps-input-and-output-dimensions-identical" title="Link to this heading">#</a></h2>
+<p>We can add a border of pixels around the input image. The number of pixels to add depends on the kernel size. For a kernel of size <span class="math notranslate nohighlight">\(k \times k\)</span>, we need to add <span class="math notranslate nohighlight">\(\frac{k-1}{2}\)</span> pixels on each side (assuming <span class="math notranslate nohighlight">\(k\)</span> is odd).</p>
+<p>For example, for a <span class="math notranslate nohighlight">\(3 \times 3\)</span> kernel, we add 1 pixel on each side. For a <span class="math notranslate nohighlight">\(5 \times 5\)</span> kernel, we add 2 pixels on each side.</p>
+<p>In PyTorch, this is done by specifying the <code class="docutils literal notranslate"><span class="pre">padding</span></code> argument in <code class="docutils literal notranslate"><span class="pre">torch.nn.Conv2d</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">conv</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The values of the added pixels can be set in different ways. The most common are:</p>
+<ul class="simple">
+<li><p><strong>Constant padding</strong>: Adds a constant value (e.g., 0) to all borders.</p></li>
+<li><p><strong>Reflective padding</strong>: Mirrors the border pixels.</p></li>
+<li><p><strong>Replicate padding</strong>: Repeats the edge pixels.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">conv</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding_mode</span><span class="o">=</span><span class="s1">&#39;reflect&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">conv</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding_mode</span><span class="o">=</span><span class="s1">&#39;replicate&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">conv</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding_mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<section id="padding-mode-constant">
+<h3>Padding mode <code class="docutils literal notranslate"><span class="pre">constant</span></code><a class="headerlink" href="#padding-mode-constant" title="Link to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">padded_smiley</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">smiley</span><span class="p">,</span> <span class="n">pad_width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span> <span class="n">constant_values</span><span class="o">=</span><span class="mi">0</span><span class="p">);</span> <span class="n">_</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">plot_input_kernel_output</span><span class="p">(</span><span class="n">padded_smiley</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">titles</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Padded Input Image&quot;</span><span class="p">,</span> <span class="s2">&quot;Kernel&quot;</span><span class="p">,</span> <span class="s2">&quot;Convolved Map&quot;</span><span class="p">))</span>
@@ -37098,7 +37129,7 @@ AvjDRsVkAAAAAElFTkSuQmCC\
 </div>
 </section>
 <section id="padding-mode-reflect">
-<h2>Padding mode <code class="docutils literal notranslate"><span class="pre">reflect</span></code><a class="headerlink" href="#padding-mode-reflect" title="Link to this heading">#</a></h2>
+<h3>Padding mode <code class="docutils literal notranslate"><span class="pre">reflect</span></code><a class="headerlink" href="#padding-mode-reflect" title="Link to this heading">#</a></h3>
 <p>Reflects the input at the edge. Sometimes causes less artefacts when used in CNNs.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -37112,7 +37143,7 @@ AvjDRsVkAAAAAElFTkSuQmCC\
 </div>
 </section>
 <section id="padding-mode-edge">
-<h2>Padding mode <code class="docutils literal notranslate"><span class="pre">edge</span></code><a class="headerlink" href="#padding-mode-edge" title="Link to this heading">#</a></h2>
+<h3>Padding mode <code class="docutils literal notranslate"><span class="pre">edge</span></code><a class="headerlink" href="#padding-mode-edge" title="Link to this heading">#</a></h3>
 <p>Repeats the edge value.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -37125,9 +37156,14 @@ AvjDRsVkAAAAAElFTkSuQmCC\
 </div>
 </div>
 </section>
+</section>
 <section id="stride-determines-how-far-the-kernel-moves-between-iterations">
 <h2>Stride determines how far the kernel moves between iterations<a class="headerlink" href="#stride-determines-how-far-the-kernel-moves-between-iterations" title="Link to this heading">#</a></h2>
 <p>A stride of 2 processes only every other pixel (in both x and y dimensions). Therefore, the output has only half the size in each dimension (a quarter of the total number of pixels).</p>
+<p>In PyTorch, this is done by specifying the <code class="docutils literal notranslate"><span class="pre">stride</span></code> argument in <code class="docutils literal notranslate"><span class="pre">torch.nn.Conv2d</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">conv</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># for loops with stride</span>
@@ -47716,6 +47752,10 @@ E14AAACglrL/cRcAAACoAAkvAAAAvEbCCwAAAK+R8AIAAMBrJLwAAADwGgkvAAAAvEbCCwAAAK+R\
 <p>A kernel is almost never used alone in a CNN. Instead, multiple kernels are used in parallel to create multiple feature maps. The number of kernels is also called the number of output channels.</p>
 <p>This enables the network to learn multiple features in parallel. For example, one kernel could learn to denoise the image (Gaussian), another kernel could detect edges (Laplacian), and a third kernel could detect horizontal edges (Sobel).</p>
 <p>Inn a CNN, the kernels are learned during training. The kernels are initialized randomly and then updated using backpropagation.</p>
+<p>In pytorch, this is done by specifying the <code class="docutils literal notranslate"><span class="pre">out_channels</span></code> argument in <code class="docutils literal notranslate"><span class="pre">torch.nn.Conv2d</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">conv</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">plot_three_kernels</span><span class="p">(</span><span class="n">smiley</span><span class="p">,</span> <span class="p">[</span><span class="n">kernel</span><span class="p">,</span> <span class="n">utils</span><span class="o">.</span><span class="n">draw_laplacian_kernel</span><span class="p">(),</span> <span class="n">utils</span><span class="o">.</span><span class="n">draw_sobel_kernel</span><span class="p">()])</span>
@@ -47731,6 +47771,34 @@ E14AAACglrL/cRcAAACoAAkvAAAAvEbCCwAAAK+R8AIAAMBrJLwAAADwGgkvAAAAvEbCCwAAAK+R\
 <h2>The receptive field limits the amount of context a CNN can learn<a class="headerlink" href="#the-receptive-field-limits-the-amount-of-context-a-cnn-can-learn" title="Link to this heading">#</a></h2>
 <p>The largest object that can be “seen” by a neuron in a CNN is called its <strong>receptive field</strong> (sometimes also called perceptive field). For example, a neuron with a receptive field of 128 pixels could not recognize a car that is 1024 pixels large, but it would recognize edetails like for example the wheels, mirrors and door handles.</p>
 <p>The receptive field depends on the kernel size and stride of all preceding layers. For example, a single 5x5 convolutional layer has a receptive field of 5x5 pixels. Two consecutive 3x3 convolutional layers have a receptive field of 5x5 pixels as well (3 + 2 = 5). Three consecutive 3x3 convolutional layers have a receptive field of 7x7 pixels (3 + 2 + 2 = 7). Note that the receptive field grows by <code class="docutils literal notranslate"><span class="pre">kernel</span> <span class="pre">size</span> <span class="pre">-</span> <span class="pre">1</span></code> pexels for each additional layer (i.e. 2 pixels for each 3x3 kernel layer). Each pooling layer doubles the receptive field.</p>
+<p>In pytorch, multiple layers can be stacked using <code class="docutils literal notranslate"><span class="pre">torch.nn.Sequential</span></code>.
+For example, a CNN with the following architecture has a receptive field of 32x32 pixels:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+    <span class="c1"># 3x3 kernel, receptive field 3x3</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+    <span class="c1"># 3x3 kernel, receptive field 5x5</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+    <span class="c1"># 2x2 pooling, receptive field 10x10</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2d</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+    <span class="c1"># 3x3 kernel, receptive field 12x12</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+    <span class="c1"># 3x3 kernel, receptive field 14x14 </span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+    <span class="c1"># 2x2 pooling, receptive field 28x28</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2d</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+    <span class="c1"># 3x3 kernel, receptive field 30x30</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+    <span class="c1"># 3x3 kernel, receptive field 32x32</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">utils</span><span class="o">.</span><span class="n">plot_receptive_field</span><span class="p">(</span><span class="n">smiley</span><span class="p">,</span> <span class="n">kernel_layers</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">kernel_sizes</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
@@ -47858,9 +47926,12 @@ E14AAACglrL/cRcAAACoAAkvAAAAvEbCCwAAAK+R8AIAAMBrJLwAAADwGgkvAAAAvEbCCwAAAK+R\
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#padding-keeps-input-and-output-dimensions-identical">Padding keeps input and output dimensions identical</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#padding-mode-reflect">Padding mode <code class="docutils literal notranslate"><span class="pre">reflect</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#padding-mode-edge">Padding mode <code class="docutils literal notranslate"><span class="pre">edge</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#padding-keeps-input-and-output-dimensions-identical">Padding keeps input and output dimensions identical</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#padding-mode-constant">Padding mode <code class="docutils literal notranslate"><span class="pre">constant</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#padding-mode-reflect">Padding mode <code class="docutils literal notranslate"><span class="pre">reflect</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#padding-mode-edge">Padding mode <code class="docutils literal notranslate"><span class="pre">edge</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stride-determines-how-far-the-kernel-moves-between-iterations">Stride determines how far the kernel moves between iterations</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#n-kernels-create-n-feature-maps"><span class="math notranslate nohighlight">\(n\)</span> kernels create <span class="math notranslate nohighlight">\(n\)</span> feature maps</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-receptive-field-limits-the-amount-of-context-a-cnn-can-learn">The receptive field limits the amount of context a CNN can learn</a></li>
