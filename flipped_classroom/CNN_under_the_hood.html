@@ -420,6 +420,7 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#padding-keeps-input-and-output-dimensions-identical">Padding keeps input and output dimensions identical</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#padding-mode-reflect">Padding mode <code class="docutils literal notranslate"><span class="pre">reflect</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#padding-mode-edge">Padding mode <code class="docutils literal notranslate"><span class="pre">edge</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stride-determines-how-far-the-kernel-moves-between-iterations">Stride determines how far the kernel moves between iterations</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#n-kernels-create-n-feature-maps"><span class="math notranslate nohighlight">\(n\)</span> kernels create <span class="math notranslate nohighlight">\(n\)</span> feature maps</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-receptive-field-limits-the-amount-of-context-a-cnn-can-learn">The receptive field limits the amount of context a CNN can learn</a></li>
@@ -37109,6 +37110,10 @@ AvjDRsVkAAAAAElFTkSuQmCC\
 <img alt="../_images/685f4939d8a6b29ca3773bcfb4ca13982822074099e5972a5deecabf261e88f5.png" src="../_images/685f4939d8a6b29ca3773bcfb4ca13982822074099e5972a5deecabf261e88f5.png" />
 </div>
 </div>
+</section>
+<section id="padding-mode-edge">
+<h2>Padding mode <code class="docutils literal notranslate"><span class="pre">edge</span></code><a class="headerlink" href="#padding-mode-edge" title="Link to this heading">#</a></h2>
+<p>Repeats the edge value.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">padded_smiley</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">smiley</span><span class="p">,</span> <span class="n">pad_width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;edge&quot;</span><span class="p">);</span> <span class="n">_</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">plot_input_kernel_output</span><span class="p">(</span><span class="n">padded_smiley</span><span class="p">,</span> <span class="n">kernel</span><span class="p">,</span> <span class="n">titles</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Padded Input Image&quot;</span><span class="p">,</span> <span class="s2">&quot;Kernel&quot;</span><span class="p">,</span> <span class="s2">&quot;Convolved Map&quot;</span><span class="p">))</span>
@@ -47855,6 +47860,7 @@ E14AAACglrL/cRcAAACoAAkvAAAAvEbCCwAAAK+R8AIAAMBrJLwAAADwGgkvAAAAvEbCCwAAAK+R\
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#padding-keeps-input-and-output-dimensions-identical">Padding keeps input and output dimensions identical</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#padding-mode-reflect">Padding mode <code class="docutils literal notranslate"><span class="pre">reflect</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#padding-mode-edge">Padding mode <code class="docutils literal notranslate"><span class="pre">edge</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stride-determines-how-far-the-kernel-moves-between-iterations">Stride determines how far the kernel moves between iterations</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#n-kernels-create-n-feature-maps"><span class="math notranslate nohighlight">\(n\)</span> kernels create <span class="math notranslate nohighlight">\(n\)</span> feature maps</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-receptive-field-limits-the-amount-of-context-a-cnn-can-learn">The receptive field limits the amount of context a CNN can learn</a></li>
