@@ -1,4 +1,4 @@
-# Prompt for GitHub copilot agent mode
+# Prompt for GitHub copilot agent mode (Model: GPT-5)
 
 we are going to teach a train the trainer workshop on convolutional neural networks.
 
