@@ -365,7 +365,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -381,6 +383,15 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#purpose">Purpose</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -392,8 +403,23 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="cnn-train-the-trainer-workshop">
 <h1>CNN Train-the-Trainer Workshop<a class="headerlink" href="#cnn-train-the-trainer-workshop" title="Link to this heading">#</a></h1>
-<p>Welcome! Use the left sidebar to navigate. Each notebook installs its own dependencies and can run on Colab GPU.</p>
-<p>Total course time: 3 hours.</p>
+<p>Welcome! Use the left sidebar to navigate. Each notebook installs its own dependencies and can run on Colab (GPU).</p>
+<p>Total course time: ~3 hours.</p>
+<section id="purpose">
+<h2>Purpose<a class="headerlink" href="#purpose" title="Link to this heading">#</a></h2>
+<p>The purpose of this jupyter book is twofold:</p>
+<ul class="simple">
+<li><p>A hands-on workshop to teach how convolutional neural networks (CNNs) work under the hood, and how to train them for image segmentation tasks.</p></li>
+<li><p>A set of materials for instructors to use in their own teaching, giving examples of classical lecture slides, flipped classroom lessons, and pair programming exercises.</p></li>
+</ul>
+</section>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Basic Python experience, including Jupyter notebooks.</p></li>
+<li><p>Basic machine learning experience is helpful but not required.</p></li>
+</ul>
+</section>
 <div class="toctree-wrapper compound">
 </div>
 <div class="toctree-wrapper compound">
@@ -447,6 +473,22 @@ document.write(`
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#purpose">Purpose</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>
