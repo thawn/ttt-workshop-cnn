@@ -1,6 +1,6 @@
 # Teaching Convolutional Neural Networks
 
-Slides PDF are available for [download as PDF here](https://github.com/thawn/ttt-workshop-cnn/blob/main/book/slides/TTT_CNN.pdf).
+Slides are available for [download as PDF here](https://github.com/thawn/ttt-workshop-cnn/blob/main/book/slides/TTT_CNN.pdf).
 
 ## Summary
 
