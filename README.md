@@ -2,6 +2,10 @@
 
 This repo contains a Jupyter Book with notebooks runnable in Google Colab. Use the Open in Colab badges at the top of each notebook.
 
+## Link to the book
+
+[https://thawn.github.io/ttt-workshop-cnn/](https://thawn.github.io/ttt-workshop-cnn/)
+
 ## Purpose
 
 The purpose of this repo is twofold:
