@@ -467,8 +467,13 @@ def plot_receptive_field(
     # draw the smiley image
     num_kernels = len(kernel_sizes)
     images = [f"image"] * num_kernels
-    layout = [images + [f"kernel{kernel_size}_{n}" for n in range(kernel_layers)] for kernel_size in kernel_sizes]
-    height = 7 / (1 + kernel_layers / num_kernels)
+    layout = []
+    for kernel_size in kernel_sizes:
+        kernels_output = []
+        for n in range(kernel_layers):
+            kernels_output += [f"kernel{kernel_size}_{n}", f"output{kernel_size}_{n}"]
+        layout.append(images + kernels_output)
+    height = 7 / (1 + 2 * kernel_layers / num_kernels)
     fig, axs = plt.subplot_mosaic(layout, figsize=(7, height))
     axs["image"].imshow(image, cmap="inferno")
     add_axis_grid(axs["image"])
@@ -482,24 +487,24 @@ def plot_receptive_field(
         pad = (need_padding) // 2
         offset = 1 if need_padding % 2 == 1 else 0
         y_pad += pad + offset
-        x_pad = -0.5 + pad + offset
         for n in range(kernel_layers):
-            receptive_field = (kernel_size - 1) * (kernel_layers - n + 1) + 1
-            x_pad -= n
-            y_pad -= n
-            if n < 1:
-                receptive_field -= kernel_size - 1
-                rect_ax = f"image"
-                x_pos = image.shape[1] // 2 - receptive_field / 2
-                y_pos = y_pad - (receptive_field - kernel_size) // 2 + i * kernel_size
-                annotation = "Receptive Field"
-            else:
-                x_pos = kernel_size / 2 - receptive_field / 2 - 0.5
-                y_pos = kernel_size / 2 - receptive_field / 2 - 0.5
-                rect_ax = f"kernel{kernel_size}_{n-1}"
+            receptive_field = (kernel_size - 1) * (kernel_layers - n) + 1
             kernel = draw_gaussian_kernel(size=kernel_size, sigma=1)
+            if n < 1:
+                # receptive_field -= kernel_size - 1
+                rect_ax = f"image"
+                convolved = ndimage.convolve(image, kernel, mode="constant", cval=0.0)
+                annotation = "Receptive\nField"
+            else:
+                convolved = ndimage.convolve(convolved, kernel, mode="constant", cval=0.0)
+                annotation = ""
+                rect_ax = f"output{kernel_size}_{n-1}"
+            x_pos = image.shape[1] // 2 - receptive_field / 2
+            y_pos = y_pad - (receptive_field - kernel_size) // 2 + i * kernel_size
             axs[f"kernel{kernel_size}_{n}"].imshow(kernel, cmap="inferno")
             add_axis_grid(axs[f"kernel{kernel_size}_{n}"], pad=pad, offset=offset)
+            axs[f"output{kernel_size}_{n}"].imshow(convolved, cmap="inferno")
+            add_axis_grid(axs[f"output{kernel_size}_{n}"])
             rect = plt.Rectangle(
                 (x_pos, y_pos),
                 receptive_field,
@@ -514,7 +519,7 @@ def plot_receptive_field(
                 xy=(x_pos + receptive_field / 2, y_pos),
                 xytext=(x_pos + receptive_field / 2, y_pos - 0.2),
                 color="cyan",
-                fontsize=12,
+                fontsize=8,
                 ha="center",
                 va="bottom",
             )
