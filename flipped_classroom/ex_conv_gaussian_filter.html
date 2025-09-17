@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Learn a Gaussian Filter with a Single Conv Layer (PyTorch) &#8212; My Jupyter Book</title>
+    <title>Exercise 1: Learn a Gaussian Filter with a Single Conv Layer (PyTorch) &#8212; My Jupyter Book</title>
   
   
   
@@ -182,8 +182,7 @@
 <li class="toctree-l1"><a class="reference internal" href="README.html">Flipped Classroom</a></li>
 <li class="toctree-l1"><a class="reference internal" href="CNN_under_the_hood.html">Under the hood of CNNs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ex_manual_convolution.html">Manual Convolution Exercise</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Learn a Gaussian Filter with a Single Conv Layer (PyTorch)</a></li>
-
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Exercise 1: Learn a Gaussian Filter with a Single Conv Layer (PyTorch)</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">U-Net (pair programming)</span></p>
 <ul class="nav bd-sidenav">
@@ -406,7 +405,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Learn a Gaussian Filter with a Single Conv Layer (PyTorch)</h1>
+    <h1>Exercise 1: Learn a Gaussian Filter with a Single Conv Layer (PyTorch)</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -416,10 +415,10 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Learn a Gaussian Filter with a Single Conv Layer (PyTorch)</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#train-a-single-layer-cnn-to-learn-the-gaussian-blur">train a single-layer CNN to learn the Gaussian blur</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#train-a-single-layer-cnn-to-learn-the-gaussian-blur">Train a Single-Layer CNN to Learn the Gaussian Blur</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calculate-the-field-of-view-at-each-layer-of-the-following-cnn-architecture">Calculate the field of view at each layer of the following CNN architecture:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bonus-train-a-single-layer-cnn-with-two-kernels-to-learn-a-laplacian-kernel-as-well-as-a-gaussian-kernel">Bonus: Train a Single-Layer CNN with two kernels to Learn a Laplacian Kernel as well as a Gaussian Kernel</a></li>
 </ul>
-
             </nav>
         </div>
     </div>
@@ -430,8 +429,8 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="learn-a-gaussian-filter-with-a-single-conv-layer-pytorch">
-<h1>Learn a Gaussian Filter with a Single Conv Layer (PyTorch)<a class="headerlink" href="#learn-a-gaussian-filter-with-a-single-conv-layer-pytorch" title="Link to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="exercise-1-learn-a-gaussian-filter-with-a-single-conv-layer-pytorch">
+<h1>Exercise 1: Learn a Gaussian Filter with a Single Conv Layer (PyTorch)<a class="headerlink" href="#exercise-1-learn-a-gaussian-filter-with-a-single-conv-layer-pytorch" title="Link to this heading">#</a></h1>
 <p><a class="reference external" href="https://colab.research.google.com/github/thawn/ttt-workshop-cnn/blob/main/book/flipped_classroom/ex_conv_gaussian_filter.ipynb"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
 <p>Train a 1-layer CNN to learn Gaussian blur using a 16x16 px smiley input and its blurred label.</p>
 <div class="cell docutils container">
@@ -521,9 +520,8 @@ document.write(`
 </div>
 </div>
 </div>
-</section>
-<section class="tex2jax_ignore mathjax_ignore" id="train-a-single-layer-cnn-to-learn-the-gaussian-blur">
-<h1>train a single-layer CNN to learn the Gaussian blur<a class="headerlink" href="#train-a-single-layer-cnn-to-learn-the-gaussian-blur" title="Link to this heading">#</a></h1>
+<section id="train-a-single-layer-cnn-to-learn-the-gaussian-blur">
+<h2>Train a Single-Layer CNN to Learn the Gaussian Blur<a class="headerlink" href="#train-a-single-layer-cnn-to-learn-the-gaussian-blur" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Convert to torch tensors (torch.tensor()) and add batch and channel dimensions (unsqueeze()). Target shape: (1, 1, H, W)</span>
@@ -591,10 +589,41 @@ document.write(`
 </div>
 </div>
 </div>
+</section>
+<section id="calculate-the-field-of-view-at-each-layer-of-the-following-cnn-architecture">
+<h2>Calculate the field of view at each layer of the following CNN architecture:<a class="headerlink" href="#calculate-the-field-of-view-at-each-layer-of-the-following-cnn-architecture" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Bonus: Do the same with a laplacian kernel</span>
-<span class="n">laplacian_kernel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2d</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2d</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2d</span><span class="p">(</span><span class="n">kernel_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">in_channels</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">out_channels</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="bonus-train-a-single-layer-cnn-with-two-kernels-to-learn-a-laplacian-kernel-as-well-as-a-gaussian-kernel">
+<h2>Bonus: Train a Single-Layer CNN with two kernels to Learn a Laplacian Kernel as well as a Gaussian Kernel<a class="headerlink" href="#bonus-train-a-single-layer-cnn-with-two-kernels-to-learn-a-laplacian-kernel-as-well-as-a-gaussian-kernel" title="Link to this heading">#</a></h2>
+<p>Tipp: you need to modify the last layer of the CNN to have 2 output channels instead of 1. Also, you need to modify the loss function to compare the output with a 2-channel label (one channel for Gaussian blur, one channel for Laplacian filter).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">laplacian_kernel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
     <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
     <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
     <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
@@ -603,6 +632,7 @@ document.write(`
 </div>
 </div>
 </div>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -669,10 +699,10 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Learn a Gaussian Filter with a Single Conv Layer (PyTorch)</a></li>
-<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#train-a-single-layer-cnn-to-learn-the-gaussian-blur">train a single-layer CNN to learn the Gaussian blur</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#train-a-single-layer-cnn-to-learn-the-gaussian-blur">Train a Single-Layer CNN to Learn the Gaussian Blur</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#calculate-the-field-of-view-at-each-layer-of-the-following-cnn-architecture">Calculate the field of view at each layer of the following CNN architecture:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bonus-train-a-single-layer-cnn-with-two-kernels-to-learn-a-laplacian-kernel-as-well-as-a-gaussian-kernel">Bonus: Train a Single-Layer CNN with two kernels to Learn a Laplacian Kernel as well as a Gaussian Kernel</a></li>
 </ul>
-
   </nav></div>
 
 </div></div>

@@ -181,8 +181,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../flipped_classroom/README.html">Flipped Classroom</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../flipped_classroom/CNN_under_the_hood.html">Under the hood of CNNs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../flipped_classroom/ex_manual_convolution.html">Manual Convolution Exercise</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../flipped_classroom/ex_conv_gaussian_filter.html">Learn a Gaussian Filter with a Single Conv Layer (PyTorch)</a></li>
-
+<li class="toctree-l1"><a class="reference internal" href="../flipped_classroom/ex_conv_gaussian_filter.html">Exercise 1: Learn a Gaussian Filter with a Single Conv Layer (PyTorch)</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">U-Net (pair programming)</span></p>
 <ul class="current nav bd-sidenav">
@@ -415,7 +414,22 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tune-learning-rate-weight-decay-and-channels-on-a-toy-training-loop">Tune learning rate, weight decay, and channels on a toy training loop</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tune-learning-rate-weight-decay-and-channels-on-a-toy-training-loop">Tune learning rate, weight decay, and channels on a toy training loop</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#install-and-import-dependencies">Install and import dependencies</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-model-and-loss-function">Data Model and Loss function</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#define-the-objective-function">Define the objective function</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#create-a-study">Create a study</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optimize-the-study">Optimize the study</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluate-and-visualize-the-results">Evaluate and visualize the results</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-optimization-history">Plot optimization history</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameter-importance">Hyperparameter importance</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parallel-coordinate-plot">Parallel coordinate plot</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#slice-plot">Slice plot</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise">Exercise</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#challenge">Challenge</a></li>
 </ul>
@@ -436,6 +450,8 @@ document.write(`
 <p><img alt="switch to GPU" src="../_images/change_runtime.png" /></p>
 <section id="tune-learning-rate-weight-decay-and-channels-on-a-toy-training-loop">
 <h2>Tune learning rate, weight decay, and channels on a toy training loop<a class="headerlink" href="#tune-learning-rate-weight-decay-and-channels-on-a-toy-training-loop" title="Link to this heading">#</a></h2>
+<section id="install-and-import-dependencies">
+<h3>Install and import dependencies<a class="headerlink" href="#install-and-import-dependencies" title="Link to this heading">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Dependency management</span>
@@ -471,6 +487,10 @@ document.write(`
 </div>
 </div>
 </div>
+</section>
+<section id="data-model-and-loss-function">
+<h3>Data Model and Loss function<a class="headerlink" href="#data-model-and-loss-function" title="Link to this heading">#</a></h3>
+<p>We define some toy data, a simple model and loss function. Which we can then optimize.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Data</span>
@@ -490,10 +510,13 @@ document.write(`
 </div>
 </div>
 </div>
+</section>
+<section id="define-the-objective-function">
+<h3>Define the objective function<a class="headerlink" href="#define-the-objective-function" title="Link to this heading">#</a></h3>
+<p>We define an objective function. Optuna will optimize its return value. The function takes a trial object as input, which is used to suggest hyperparameters. In this example, we will tune the learning rate, weight decay, and number of channels in a simple neural network.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Objective function</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">objective</span><span class="p">(</span><span class="n">trial</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">objective</span><span class="p">(</span><span class="n">trial</span><span class="p">):</span>
     <span class="n">lr</span> <span class="o">=</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_float</span><span class="p">(</span><span class="s1">&#39;lr&#39;</span><span class="p">,</span> <span class="mf">1e-4</span><span class="p">,</span> <span class="mf">1e-2</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">wd</span> <span class="o">=</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_float</span><span class="p">(</span><span class="s1">&#39;weight_decay&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">)</span>
     <span class="n">ch</span> <span class="o">=</span> <span class="n">trial</span><span class="o">.</span><span class="n">suggest_categorical</span><span class="p">(</span><span class="s1">&#39;channels&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">32</span><span class="p">])</span>
@@ -506,10 +529,15 @@ document.write(`
 </div>
 </div>
 </div>
+</section>
+<section id="create-a-study">
+<h3>Create a study<a class="headerlink" href="#create-a-study" title="Link to this heading">#</a></h3>
+<p>Here we create a study object, which will manage the optimization process. We specify that we want to minimize the objective function.</p>
+<p>By saving the study to a SQLite database, we can easily resume the optimization process later if needed. Thereby, we can add more trials without losing previous results, which means our new trials will be run with hyperparameters closer to the optimum.</p>
+<p>By setting the direction to “minimize”, we indicate that we want to find the hyperparameters that result in the lowest value of the objective function.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create study</span>
-<span class="n">study_name</span> <span class="o">=</span> <span class="s2">&quot;tiny_optuna_study&quot;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">study_name</span> <span class="o">=</span> <span class="s2">&quot;tiny_optuna_study&quot;</span>
 
 <span class="n">db_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">)</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">study_name</span><span class="si">}</span><span class="s2">.db&quot;</span>
 <span class="n">db_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -521,15 +549,19 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[I 2025-09-17 11:12:56,977] Using an existing study with name &#39;tiny_optuna_study&#39; instead of creating a new one.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[I 2025-09-17 12:24:15,255] Using an existing study with name &#39;tiny_optuna_study&#39; instead of creating a new one.
 </pre></div>
 </div>
 </div>
 </div>
+</section>
+<section id="optimize-the-study">
+<h3>Optimize the study<a class="headerlink" href="#optimize-the-study" title="Link to this heading">#</a></h3>
+<p>This will run the optimization process for a specified number of trials. Each trial will call the objective function with different hyperparameters suggested by Optuna.</p>
+<p>Optuna will keep track of the results and will choose hyperparameters close to the best hyperparameters found so far. Thereby, we do a form of gradient descent in hyperparameter space.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Optimize the study</span>
-<span class="n">study</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">objective</span><span class="p">,</span> <span class="n">n_trials</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">study</span><span class="o">.</span><span class="n">optimize</span><span class="p">(</span><span class="n">objective</span><span class="p">,</span> <span class="n">n_trials</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Best:&#39;</span><span class="p">,</span> <span class="n">study</span><span class="o">.</span><span class="n">best_params</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -575,10 +607,17 @@ Consider using tensor.detach() first. (Triggered internally at /Users/runner/wor
 </div>
 </div>
 </div>
+</section>
+</section>
+<section id="evaluate-and-visualize-the-results">
+<h2>Evaluate and visualize the results<a class="headerlink" href="#evaluate-and-visualize-the-results" title="Link to this heading">#</a></h2>
+<p>After the optimization is complete, we can evaluate and visualize the results using <code class="docutils literal notranslate"><span class="pre">optuna.visualization</span></code> module. Here are some common visualizations:</p>
+<section id="plot-optimization-history">
+<h3>Plot optimization history<a class="headerlink" href="#plot-optimization-history" title="Link to this heading">#</a></h3>
+<p>From the history plot, we can see how the objective value (e.g., validation loss) changes over the trials. This helps us understand the convergence behavior of the optimization process. We clearly see that the objective value decreases over time, indicating that the optimization is effectively finding better hyperparameters.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot optimization history</span>
-<span class="n">fig</span> <span class="o">=</span> <span class="n">optuna</span><span class="o">.</span><span class="n">visualization</span><span class="o">.</span><span class="n">plot_optimization_history</span><span class="p">(</span><span class="n">study</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">optuna</span><span class="o">.</span><span class="n">visualization</span><span class="o">.</span><span class="n">plot_optimization_history</span><span class="p">(</span><span class="n">study</span><span class="p">)</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -586,10 +625,13 @@ Consider using tensor.detach() first. (Triggered internally at /Users/runner/wor
 <div class="cell_output docutils container">
 </div>
 </div>
+</section>
+<section id="hyperparameter-importance">
+<h3>Hyperparameter importance<a class="headerlink" href="#hyperparameter-importance" title="Link to this heading">#</a></h3>
+<p>The hyperparameter importance plot shows the relative importance of each hyperparameter in determining the objective value. This can help us identify which hyperparameters have the most significant impact on model performance. In this case, we can see that the learning rate has the highest importance, followed by number of channels and weight decay.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot hyperparameter importance</span>
-<span class="n">fig</span> <span class="o">=</span> <span class="n">optuna</span><span class="o">.</span><span class="n">visualization</span><span class="o">.</span><span class="n">plot_param_importances</span><span class="p">(</span><span class="n">study</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">optuna</span><span class="o">.</span><span class="n">visualization</span><span class="o">.</span><span class="n">plot_param_importances</span><span class="p">(</span><span class="n">study</span><span class="p">)</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -597,10 +639,14 @@ Consider using tensor.detach() first. (Triggered internally at /Users/runner/wor
 <div class="cell_output docutils container">
 </div>
 </div>
+</section>
+<section id="parallel-coordinate-plot">
+<h3>Parallel coordinate plot<a class="headerlink" href="#parallel-coordinate-plot" title="Link to this heading">#</a></h3>
+<p>The parallel coordinate plot visualizes the relationship between hyperparameters and the objective value. Each line represents a trial, and we can see how different hyperparameter values correspond to different objective values. This can help us identify patterns and interactions between hyperparameters. For example, we can see that lower learning rates tend to result in lower objective values, especially when combined with higher number of channels.</p>
+<p>Darker lines indicate better performance (in our case lower objective values).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot parallel coordinates</span>
-<span class="n">fig</span> <span class="o">=</span> <span class="n">optuna</span><span class="o">.</span><span class="n">visualization</span><span class="o">.</span><span class="n">plot_parallel_coordinate</span><span class="p">(</span><span class="n">study</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">optuna</span><span class="o">.</span><span class="n">visualization</span><span class="o">.</span><span class="n">plot_parallel_coordinate</span><span class="p">(</span><span class="n">study</span><span class="p">)</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -608,10 +654,14 @@ Consider using tensor.detach() first. (Triggered internally at /Users/runner/wor
 <div class="cell_output docutils container">
 </div>
 </div>
+</section>
+<section id="slice-plot">
+<h3>Slice plot<a class="headerlink" href="#slice-plot" title="Link to this heading">#</a></h3>
+<p>The slice plot shows the distribution of objective values for each hyperparameter. This can help us understand how sensitive the objective value is to changes in each hyperparameter. For example, we can see that the learning rate has a wide range of objective values, indicating that it is a sensitive hyperparameter. In contrast, weight decay has a narrower range of objective values, suggesting that it is less sensitive.</p>
+<p>Also, this helps to identify good ranges for hyperparameters. For example, we can see that the best learning rates are close to our limit of 0.01. This means, we should probably increase the upper limit and run some more trials.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot slice</span>
-<span class="n">fig</span> <span class="o">=</span> <span class="n">optuna</span><span class="o">.</span><span class="n">visualization</span><span class="o">.</span><span class="n">plot_slice</span><span class="p">(</span><span class="n">study</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">optuna</span><span class="o">.</span><span class="n">visualization</span><span class="o">.</span><span class="n">plot_slice</span><span class="p">(</span><span class="n">study</span><span class="p">)</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -619,6 +669,12 @@ Consider using tensor.detach() first. (Triggered internally at /Users/runner/wor
 <div class="cell_output docutils container">
 </div>
 </div>
+</section>
+</section>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<p>With optuna, we have a powerful and flexible tool for hyperparameter optimization. By defining an objective function and using various visualization techniques, we can effectively tune our models to achieve better performance.</p>
+<p>The hardest part usually is to adapt your model to change its architecture based on the hyperparameters suggested by optuna. But once that is done, you can easily run many trials and find good hyperparameters.</p>
 </section>
 <section id="exercise">
 <h2>Exercise<a class="headerlink" href="#exercise" title="Link to this heading">#</a></h2>
@@ -688,7 +744,22 @@ Consider using tensor.detach() first. (Triggered internally at /Users/runner/wor
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tune-learning-rate-weight-decay-and-channels-on-a-toy-training-loop">Tune learning rate, weight decay, and channels on a toy training loop</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tune-learning-rate-weight-decay-and-channels-on-a-toy-training-loop">Tune learning rate, weight decay, and channels on a toy training loop</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#install-and-import-dependencies">Install and import dependencies</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-model-and-loss-function">Data Model and Loss function</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#define-the-objective-function">Define the objective function</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#create-a-study">Create a study</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optimize-the-study">Optimize the study</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluate-and-visualize-the-results">Evaluate and visualize the results</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#plot-optimization-history">Plot optimization history</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#hyperparameter-importance">Hyperparameter importance</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parallel-coordinate-plot">Parallel coordinate plot</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#slice-plot">Slice plot</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercise">Exercise</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#challenge">Challenge</a></li>
 </ul>
