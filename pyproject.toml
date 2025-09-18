@@ -53,6 +53,7 @@ dev = [
 book = [
   # Build the Jupyter Book documentation site
   "jupyter-book>=1.0.0",
+  "kaleido",
 ]
 
 [project.urls]
