@@ -16,6 +16,7 @@ import matplotlib.pyplot as plt
 plt.rcParams["svg.fonttype"] = "none"  # Keep text as text in SVGs
 
 output_path = Path("output")
+output_path.mkdir(exist_ok=True, parents=True)
 
 
 def ensure_seed(seed: int = 42) -> int:
