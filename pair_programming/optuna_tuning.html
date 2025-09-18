@@ -468,9 +468,10 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">optuna</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch</span><span class="o">,</span><span class="w"> </span><span class="nn">torch.nn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nn</span><span class="o">,</span><span class="w"> </span><span class="nn">torch.optim</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">optim</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">optuna</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">plotly.io</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pio</span>
 
 <span class="c1"># fix random seeds for reproducibility</span>
 <span class="n">torch</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
@@ -479,6 +480,10 @@ document.write(`
 <span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span>
 <span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;mps&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">mps</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="n">device</span>  <span class="c1">## Mac OS metal</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using device: </span><span class="si">{</span><span class="n">device</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># set plotly to render SVGs for display in the Jupyter book</span>
+<span class="k">if</span> <span class="s1">&#39;svg&#39;</span> <span class="ow">in</span> <span class="n">pio</span><span class="o">.</span><span class="n">renderers</span><span class="p">:</span>
+    <span class="n">pio</span><span class="o">.</span><span class="n">renderers</span><span class="o">.</span><span class="n">default</span> <span class="o">=</span> <span class="s2">&quot;svg&quot;</span>
 </pre></div>
 </div>
 </div>
@@ -550,7 +555,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[I 2025-09-17 12:24:15,255] Using an existing study with name &#39;tiny_optuna_study&#39; instead of creating a new one.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[I 2025-09-18 16:57:55,138] Using an existing study with name &#39;tiny_optuna_study&#39; instead of creating a new one.
 </pre></div>
 </div>
 </div>
@@ -568,42 +573,44 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/8s/7jr95f1d28vflnwm1cfqv7t40000gr/T/ipykernel_8995/2863418574.py:10: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/8s/7jr95f1d28vflnwm1cfqv7t40000gr/T/ipykernel_16346/1785795861.py:9: UserWarning:
+
+Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
 Consider using tensor.detach() first. (Triggered internally at /Users/runner/work/pytorch/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)
-  return float(loss)
-[I 2025-09-17 11:12:57,778] Trial 30 finished with value: 1.0118509531021118 and parameters: {&#39;lr&#39;: 0.007077761198021904, &#39;weight_decay&#39;: 0.00022229522008306978, &#39;channels&#39;: 4}. Best is trial 25 with value: 0.9992284774780273.
-[I 2025-09-17 11:12:57,857] Trial 31 finished with value: 1.000373125076294 and parameters: {&#39;lr&#39;: 0.009118217839010612, &#39;weight_decay&#39;: 0.0007437894921972981, &#39;channels&#39;: 4}. Best is trial 25 with value: 0.9992284774780273.
-[I 2025-09-17 11:12:57,929] Trial 32 finished with value: 1.008986473083496 and parameters: {&#39;lr&#39;: 0.007252798162024875, &#39;weight_decay&#39;: 0.0007407579168992411, &#39;channels&#39;: 4}. Best is trial 25 with value: 0.9992284774780273.
-[I 2025-09-17 11:12:58,003] Trial 33 finished with value: 1.002610206604004 and parameters: {&#39;lr&#39;: 0.0049561667159070295, &#39;weight_decay&#39;: 0.00048185411311544587, &#39;channels&#39;: 4}. Best is trial 25 with value: 0.9992284774780273.
-[I 2025-09-17 11:12:58,079] Trial 34 finished with value: 0.9979422092437744 and parameters: {&#39;lr&#39;: 0.009672107938551474, &#39;weight_decay&#39;: 0.0009679718257625151, &#39;channels&#39;: 4}. Best is trial 34 with value: 0.9979422092437744.
-[I 2025-09-17 11:12:58,147] Trial 35 finished with value: 1.0174627304077148 and parameters: {&#39;lr&#39;: 0.0004391261756050127, &#39;weight_decay&#39;: 0.0009374192916886558, &#39;channels&#39;: 4}. Best is trial 34 with value: 0.9979422092437744.
-[I 2025-09-17 11:12:58,324] Trial 36 finished with value: 1.0127384662628174 and parameters: {&#39;lr&#39;: 0.006413871970844018, &#39;weight_decay&#39;: 0.0009969683805865694, &#39;channels&#39;: 32}. Best is trial 34 with value: 0.9979422092437744.
-[I 2025-09-17 11:12:58,393] Trial 37 finished with value: 1.01931631565094 and parameters: {&#39;lr&#39;: 0.004107328210014978, &#39;weight_decay&#39;: 0.0004455661976358142, &#39;channels&#39;: 4}. Best is trial 34 with value: 0.9979422092437744.
-[I 2025-09-17 11:12:58,475] Trial 38 finished with value: 1.0294582843780518 and parameters: {&#39;lr&#39;: 0.003039347553112922, &#39;weight_decay&#39;: 0.00040796045578020786, &#39;channels&#39;: 8}. Best is trial 34 with value: 0.9979422092437744.
-[I 2025-09-17 11:12:58,590] Trial 39 finished with value: 1.0224741697311401 and parameters: {&#39;lr&#39;: 0.001381975549711861, &#39;weight_decay&#39;: 0.00018853378199656446, &#39;channels&#39;: 16}. Best is trial 34 with value: 0.9979422092437744.
-[I 2025-09-17 11:12:58,657] Trial 40 finished with value: 1.0093765258789062 and parameters: {&#39;lr&#39;: 0.007667944456947918, &#39;weight_decay&#39;: 7.826758980684785e-05, &#39;channels&#39;: 4}. Best is trial 34 with value: 0.9979422092437744.
-[I 2025-09-17 11:12:58,725] Trial 41 finished with value: 0.9964410662651062 and parameters: {&#39;lr&#39;: 0.009978074702988046, &#39;weight_decay&#39;: 0.0007335612785609747, &#39;channels&#39;: 4}. Best is trial 41 with value: 0.9964410662651062.
-[I 2025-09-17 11:12:58,794] Trial 42 finished with value: 1.0364718437194824 and parameters: {&#39;lr&#39;: 0.00010369621443549447, &#39;weight_decay&#39;: 0.0008549893091700598, &#39;channels&#39;: 4}. Best is trial 41 with value: 0.9964410662651062.
-[I 2025-09-17 11:12:58,862] Trial 43 finished with value: 0.9979429244995117 and parameters: {&#39;lr&#39;: 0.009987068388176857, &#39;weight_decay&#39;: 0.000269397084178768, &#39;channels&#39;: 4}. Best is trial 41 with value: 0.9964410662651062.
-[I 2025-09-17 11:12:58,954] Trial 44 finished with value: 1.000487208366394 and parameters: {&#39;lr&#39;: 0.009612102156584236, &#39;weight_decay&#39;: 0.0005392047959575771, &#39;channels&#39;: 4}. Best is trial 41 with value: 0.9964410662651062.
-[I 2025-09-17 11:12:59,023] Trial 45 finished with value: 0.9995326995849609 and parameters: {&#39;lr&#39;: 0.005657899801025722, &#39;weight_decay&#39;: 0.0002867179293019638, &#39;channels&#39;: 4}. Best is trial 41 with value: 0.9964410662651062.
-[I 2025-09-17 11:12:59,105] Trial 46 finished with value: 1.003088116645813 and parameters: {&#39;lr&#39;: 0.005536525428952835, &#39;weight_decay&#39;: 0.00030518517741736186, &#39;channels&#39;: 8}. Best is trial 41 with value: 0.9964410662651062.
-[I 2025-09-17 11:12:59,274] Trial 47 finished with value: 1.000117540359497 and parameters: {&#39;lr&#39;: 0.005780832624197239, &#39;weight_decay&#39;: 0.00026729737434930275, &#39;channels&#39;: 32}. Best is trial 41 with value: 0.9964410662651062.
-[I 2025-09-17 11:12:59,343] Trial 48 finished with value: 1.0051277875900269 and parameters: {&#39;lr&#39;: 0.0077735182673779255, &#39;weight_decay&#39;: 0.00043363502777963, &#39;channels&#39;: 4}. Best is trial 41 with value: 0.9964410662651062.
-[I 2025-09-17 11:12:59,410] Trial 49 finished with value: 1.0133004188537598 and parameters: {&#39;lr&#39;: 0.004835848838219171, &#39;weight_decay&#39;: 0.0002627671487992481, &#39;channels&#39;: 4}. Best is trial 41 with value: 0.9964410662651062.
-[I 2025-09-17 11:12:59,477] Trial 50 finished with value: 1.0165175199508667 and parameters: {&#39;lr&#39;: 0.00365954931605245, &#39;weight_decay&#39;: 0.0009141574683566872, &#39;channels&#39;: 4}. Best is trial 41 with value: 0.9964410662651062.
-[I 2025-09-17 11:12:59,545] Trial 51 finished with value: 1.0193841457366943 and parameters: {&#39;lr&#39;: 0.008161800409652862, &#39;weight_decay&#39;: 0.0003550950276124476, &#39;channels&#39;: 4}. Best is trial 41 with value: 0.9964410662651062.
-[I 2025-09-17 11:12:59,612] Trial 52 finished with value: 1.0006392002105713 and parameters: {&#39;lr&#39;: 0.006440552830283267, &#39;weight_decay&#39;: 0.00015665333393843336, &#39;channels&#39;: 4}. Best is trial 41 with value: 0.9964410662651062.
-[I 2025-09-17 11:12:59,680] Trial 53 finished with value: 0.9959361553192139 and parameters: {&#39;lr&#39;: 0.008417506944020166, &#39;weight_decay&#39;: 0.0007712522755467814, &#39;channels&#39;: 4}. Best is trial 53 with value: 0.9959361553192139.
-[I 2025-09-17 11:12:59,747] Trial 54 finished with value: 1.0000667572021484 and parameters: {&#39;lr&#39;: 0.009736851238571648, &#39;weight_decay&#39;: 0.0008133974275939808, &#39;channels&#39;: 4}. Best is trial 53 with value: 0.9959361553192139.
-[I 2025-09-17 11:12:59,814] Trial 55 finished with value: 1.0196034908294678 and parameters: {&#39;lr&#39;: 0.006360818300539465, &#39;weight_decay&#39;: 0.0007776075424304425, &#39;channels&#39;: 4}. Best is trial 53 with value: 0.9959361553192139.
-[I 2025-09-17 11:12:59,928] Trial 56 finished with value: 1.0032978057861328 and parameters: {&#39;lr&#39;: 0.008142963373842075, &#39;weight_decay&#39;: 0.0006757178747308983, &#39;channels&#39;: 16}. Best is trial 53 with value: 0.9959361553192139.
-[I 2025-09-17 11:12:59,997] Trial 57 finished with value: 1.0212695598602295 and parameters: {&#39;lr&#39;: 0.00526642834343851, &#39;weight_decay&#39;: 0.00099181382157683, &#39;channels&#39;: 4}. Best is trial 53 with value: 0.9959361553192139.
-[I 2025-09-17 11:13:00,066] Trial 58 finished with value: 1.0039217472076416 and parameters: {&#39;lr&#39;: 0.008298019446687746, &#39;weight_decay&#39;: 0.0008762498347119773, &#39;channels&#39;: 4}. Best is trial 53 with value: 0.9959361553192139.
-[I 2025-09-17 11:13:00,147] Trial 59 finished with value: 1.0083703994750977 and parameters: {&#39;lr&#39;: 0.0028490315509110357, &#39;weight_decay&#39;: 0.00039971016547720557, &#39;channels&#39;: 8}. Best is trial 53 with value: 0.9959361553192139.
+
+[I 2025-09-18 16:57:55,661] Trial 180 finished with value: 1.0023503303527832 and parameters: {&#39;lr&#39;: 0.006057775760858208, &#39;weight_decay&#39;: 0.000751040066148466, &#39;channels&#39;: 8}. Best is trial 139 with value: 0.9939734935760498.
+[I 2025-09-18 16:57:55,726] Trial 181 finished with value: 1.0007994174957275 and parameters: {&#39;lr&#39;: 0.009059817748544932, &#39;weight_decay&#39;: 0.0006961055183184683, &#39;channels&#39;: 8}. Best is trial 139 with value: 0.9939734935760498.
+[I 2025-09-18 16:57:55,790] Trial 182 finished with value: 0.994810163974762 and parameters: {&#39;lr&#39;: 0.00933784340257503, &#39;weight_decay&#39;: 0.0007341604393412627, &#39;channels&#39;: 8}. Best is trial 139 with value: 0.9939734935760498.
+[I 2025-09-18 16:57:55,913] Trial 183 finished with value: 0.9974181652069092 and parameters: {&#39;lr&#39;: 0.008431960435019892, &#39;weight_decay&#39;: 0.0007323026381810234, &#39;channels&#39;: 8}. Best is trial 139 with value: 0.9939734935760498.
+[I 2025-09-18 16:57:55,997] Trial 184 finished with value: 1.0008041858673096 and parameters: {&#39;lr&#39;: 0.00908355661482919, &#39;weight_decay&#39;: 0.0007694656585647469, &#39;channels&#39;: 8}. Best is trial 139 with value: 0.9939734935760498.
+[I 2025-09-18 16:57:56,064] Trial 185 finished with value: 1.0047383308410645 and parameters: {&#39;lr&#39;: 0.007856900915545957, &#39;weight_decay&#39;: 0.0007837760680055667, &#39;channels&#39;: 8}. Best is trial 139 with value: 0.9939734935760498.
+[I 2025-09-18 16:57:56,133] Trial 186 finished with value: 1.0184125900268555 and parameters: {&#39;lr&#39;: 0.0002557561473822107, &#39;weight_decay&#39;: 0.0007393006565330367, &#39;channels&#39;: 8}. Best is trial 139 with value: 0.9939734935760498.
+[I 2025-09-18 16:57:56,198] Trial 187 finished with value: 1.0023930072784424 and parameters: {&#39;lr&#39;: 0.008439661686685362, &#39;weight_decay&#39;: 0.0007091515782749283, &#39;channels&#39;: 8}. Best is trial 139 with value: 0.9939734935760498.
+[I 2025-09-18 16:57:56,261] Trial 188 finished with value: 1.0013148784637451 and parameters: {&#39;lr&#39;: 0.009365349929605263, &#39;weight_decay&#39;: 0.0006488668028725007, &#39;channels&#39;: 8}. Best is trial 139 with value: 0.9939734935760498.
+[I 2025-09-18 16:57:56,347] Trial 189 finished with value: 1.0151898860931396 and parameters: {&#39;lr&#39;: 0.007545762341212588, &#39;weight_decay&#39;: 0.000905334284871189, &#39;channels&#39;: 16}. Best is trial 139 with value: 0.9939734935760498.
+[I 2025-09-18 16:57:56,410] Trial 190 finished with value: 0.9989669322967529 and parameters: {&#39;lr&#39;: 0.009981818204878399, &#39;weight_decay&#39;: 0.0006671827483011295, &#39;channels&#39;: 8}. Best is trial 139 with value: 0.9939734935760498.
+[I 2025-09-18 16:57:56,473] Trial 191 finished with value: 0.9974707365036011 and parameters: {&#39;lr&#39;: 0.009970075704074835, &#39;weight_decay&#39;: 0.0006996253499101856, &#39;channels&#39;: 8}. Best is trial 139 with value: 0.9939734935760498.
+[I 2025-09-18 16:57:56,537] Trial 192 finished with value: 0.9965693354606628 and parameters: {&#39;lr&#39;: 0.008515694601216591, &#39;weight_decay&#39;: 0.0006827393298928026, &#39;channels&#39;: 8}. Best is trial 139 with value: 0.9939734935760498.
+[I 2025-09-18 16:57:56,599] Trial 193 finished with value: 1.0006887912750244 and parameters: {&#39;lr&#39;: 0.008418170329054498, &#39;weight_decay&#39;: 0.0007270336596973319, &#39;channels&#39;: 8}. Best is trial 139 with value: 0.9939734935760498.
+[I 2025-09-18 16:57:56,662] Trial 194 finished with value: 1.0054768323898315 and parameters: {&#39;lr&#39;: 0.008993510693450568, &#39;weight_decay&#39;: 0.0006821067770548398, &#39;channels&#39;: 8}. Best is trial 139 with value: 0.9939734935760498.
+[I 2025-09-18 16:57:56,725] Trial 195 finished with value: 1.0031813383102417 and parameters: {&#39;lr&#39;: 0.006923456109032114, &#39;weight_decay&#39;: 0.0007502045112309025, &#39;channels&#39;: 8}. Best is trial 139 with value: 0.9939734935760498.
+[I 2025-09-18 16:57:56,788] Trial 196 finished with value: 0.9963175058364868 and parameters: {&#39;lr&#39;: 0.007787419698995418, &#39;weight_decay&#39;: 0.0006354088625232181, &#39;channels&#39;: 8}. Best is trial 139 with value: 0.9939734935760498.
+[I 2025-09-18 16:57:56,851] Trial 197 finished with value: 0.9972453117370605 and parameters: {&#39;lr&#39;: 0.00774080211365397, &#39;weight_decay&#39;: 0.0006097931424854962, &#39;channels&#39;: 8}. Best is trial 139 with value: 0.9939734935760498.
+[I 2025-09-18 16:57:56,914] Trial 198 finished with value: 1.004941701889038 and parameters: {&#39;lr&#39;: 0.008254975984465472, &#39;weight_decay&#39;: 0.0009337189056623468, &#39;channels&#39;: 8}. Best is trial 139 with value: 0.9939734935760498.
+[I 2025-09-18 16:57:56,977] Trial 199 finished with value: 1.0067094564437866 and parameters: {&#39;lr&#39;: 0.006604664272040851, &#39;weight_decay&#39;: 0.000843123355245011, &#39;channels&#39;: 8}. Best is trial 139 with value: 0.9939734935760498.
+[I 2025-09-18 16:57:57,041] Trial 200 finished with value: 0.997174859046936 and parameters: {&#39;lr&#39;: 0.007411298052780722, &#39;weight_decay&#39;: 0.0007091021609846764, &#39;channels&#39;: 8}. Best is trial 139 with value: 0.9939734935760498.
+[I 2025-09-18 16:57:57,106] Trial 201 finished with value: 0.9987568855285645 and parameters: {&#39;lr&#39;: 0.007464586012557077, &#39;weight_decay&#39;: 0.0007153476504890137, &#39;channels&#39;: 8}. Best is trial 139 with value: 0.9939734935760498.
+[I 2025-09-18 16:57:57,171] Trial 202 finished with value: 0.9959613084793091 and parameters: {&#39;lr&#39;: 0.008498701173308433, &#39;weight_decay&#39;: 0.0006355833735301832, &#39;channels&#39;: 8}. Best is trial 139 with value: 0.9939734935760498.
+[I 2025-09-18 16:57:57,235] Trial 203 finished with value: 1.0032774209976196 and parameters: {&#39;lr&#39;: 0.008811281640110788, &#39;weight_decay&#39;: 0.0006313521936115682, &#39;channels&#39;: 8}. Best is trial 139 with value: 0.9939734935760498.
+[I 2025-09-18 16:57:57,298] Trial 204 finished with value: 1.0003342628479004 and parameters: {&#39;lr&#39;: 0.008265974477568098, &#39;weight_decay&#39;: 0.0006799549218828124, &#39;channels&#39;: 8}. Best is trial 139 with value: 0.9939734935760498.
+[I 2025-09-18 16:57:57,361] Trial 205 finished with value: 0.9961594343185425 and parameters: {&#39;lr&#39;: 0.0090651894649518, &#39;weight_decay&#39;: 0.0006006006308271888, &#39;channels&#39;: 8}. Best is trial 139 with value: 0.9939734935760498.
+[I 2025-09-18 16:57:57,425] Trial 206 finished with value: 1.001678466796875 and parameters: {&#39;lr&#39;: 0.009243542963581151, &#39;weight_decay&#39;: 0.00060070798635213, &#39;channels&#39;: 8}. Best is trial 139 with value: 0.9939734935760498.
+[I 2025-09-18 16:57:57,551] Trial 207 finished with value: 1.025012731552124 and parameters: {&#39;lr&#39;: 0.009146374930919484, &#39;weight_decay&#39;: 0.0006276734881074321, &#39;channels&#39;: 32}. Best is trial 139 with value: 0.9939734935760498.
+[I 2025-09-18 16:57:57,615] Trial 208 finished with value: 0.9967833757400513 and parameters: {&#39;lr&#39;: 0.008644710502095681, &#39;weight_decay&#39;: 0.000610098958477496, &#39;channels&#39;: 8}. Best is trial 139 with value: 0.9939734935760498.
+[I 2025-09-18 16:57:57,679] Trial 209 finished with value: 1.0001360177993774 and parameters: {&#39;lr&#39;: 0.008551428851804533, &#39;weight_decay&#39;: 0.0006628706933331423, &#39;channels&#39;: 8}. Best is trial 139 with value: 0.9939734935760498.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Best: {&#39;lr&#39;: 0.008417506944020166, &#39;weight_decay&#39;: 0.0007712522755467814, &#39;channels&#39;: 4}
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Best: {&#39;lr&#39;: 0.009179284122480527, &#39;weight_decay&#39;: 0.0006949097213601208, &#39;channels&#39;: 8}
 </pre></div>
 </div>
 </div>
@@ -624,6 +631,7 @@ Consider using tensor.detach() first. (Triggered internally at /Users/runner/wor
 </div>
 </div>
 <div class="cell_output docutils container">
+<img alt="../_images/013673969ed79982c48ce50c14d0494f1be6243335a7e3e354a28397ff0b9426.svg" src="../_images/013673969ed79982c48ce50c14d0494f1be6243335a7e3e354a28397ff0b9426.svg" />
 </div>
 </div>
 </section>
@@ -638,6 +646,7 @@ Consider using tensor.detach() first. (Triggered internally at /Users/runner/wor
 </div>
 </div>
 <div class="cell_output docutils container">
+<img alt="../_images/c0089a72a6e1505c7646922e6c68549f4dc62c05fcfde159d7c74b31cd9d8307.svg" src="../_images/c0089a72a6e1505c7646922e6c68549f4dc62c05fcfde159d7c74b31cd9d8307.svg" />
 </div>
 </div>
 </section>
@@ -653,6 +662,7 @@ Consider using tensor.detach() first. (Triggered internally at /Users/runner/wor
 </div>
 </div>
 <div class="cell_output docutils container">
+<img alt="../_images/729c5b0bf250e64c08463d33f523f83f3763eb4d11d0284df169f809c0e0c167.svg" src="../_images/729c5b0bf250e64c08463d33f523f83f3763eb4d11d0284df169f809c0e0c167.svg" />
 </div>
 </div>
 </section>
@@ -668,6 +678,7 @@ Consider using tensor.detach() first. (Triggered internally at /Users/runner/wor
 </div>
 </div>
 <div class="cell_output docutils container">
+<img alt="../_images/d1339d5f9ff54ce4f305696f03a8c0e539861dad3878e72af24f7a9f7d5b19af.svg" src="../_images/d1339d5f9ff54ce4f305696f03a8c0e539861dad3878e72af24f7a9f7d5b19af.svg" />
 </div>
 </div>
 </section>
