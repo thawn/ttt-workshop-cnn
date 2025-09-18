@@ -3,7 +3,7 @@
 
 root: intro
 repository:
-  url: https://github.com/USER/teaching-cnn
+  url: https://github.com/thawn/ttt-workshop-cnn
   path_to_book: book/
   branch: main
 html:
