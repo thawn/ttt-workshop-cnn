@@ -1,10 +1,12 @@
 [build-system]
-requires = ["hatchling>=1.25"]
-build-backend = "hatchling.build"
+requires = [
+  "setuptools>=64",
+  "setuptools_scm[toml]>=8",
+]
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "ttt-workshop-cnn"
-version = "0.1.0"
 description = "Utilities for the TTT CNN workshop (data helpers, reproducibility, simple image ops)."
 readme = "README.md"
 requires-python = ">=3.9"
@@ -12,6 +14,7 @@ license = { text = "Apache-2.0" }
 authors = [
   { name = "TTT CNN Contributors" }
 ]
+dynamic = ["version"]
 classifiers = [
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3 :: Only",
@@ -56,8 +59,16 @@ book = [
 Repository = "https://github.com/thawn/ttt-workshop-cnn"
 Issues = "https://github.com/thawn/ttt-workshop-cnn/issues"
 
-[tool.hatch.build.targets.wheel]
-packages = ["src/ttt_workshop_cnn"]
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.dynamic]
+version = {attr = "ttt_workshop_cnn._version.__version__"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["ttt_workshop_cnn*"]
+namespaces = true
 
 [tool.black]
 target-version = ["py39", "py310", "py311", "py312"]
@@ -68,3 +79,8 @@ line-length = 100
 target-version = "py39"
 lint.select = ["E", "F", "I", "UP", "B"]
 lint.ignore = ["E203", "E266", "E501"]
+
+[tool.setuptools_scm]
+# Generate a version file inside the package at build/install time
+write_to = "src/ttt_workshop_cnn/_version.py"
+fallback_version = "0.0.0"
