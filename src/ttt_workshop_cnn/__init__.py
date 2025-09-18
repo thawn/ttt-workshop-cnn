@@ -8,5 +8,3 @@ Notes
 - Keep functions minimal and dependency-light.
 - Prefer pure functions with clear inputs/outputs.
 """
-
-from ._version import __version__
