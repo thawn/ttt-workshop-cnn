@@ -1,6 +1,6 @@
 # Pair programming
 
-In this session, you will work in pairs.
+In this ~ 60 - 120 min session, you will work in pairs.
 
 Ideally, an experienced person matches with an inexperienced person. The inexperienced person types (driver) and the experienced person advises and keeps overview (navigator)
 
