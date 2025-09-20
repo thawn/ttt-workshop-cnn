@@ -203,14 +203,16 @@ def animate_convolution(image, kernel, stride=1, interval=50):
 
     # Create a black background for kernel animation
     kernel_bg = np.zeros_like(image)
-    kernel_im = axs[1].imshow(kernel_bg, cmap="inferno", vmin=0, vmax=kernel.max())
+    kernel_scale = np.max(np.abs(kernel)) * 2
+    kernel_im = axs[1].imshow(kernel_bg, cmap="PuOr_r", vmin=-kernel_scale, vmax=kernel_scale)
     axs[1].set_title("Kernel Position")
 
     # Calculate output size with stride
     out_h = (image.shape[0] - kernel.shape[0]) // stride + 1
     out_w = (image.shape[1] - kernel.shape[1]) // stride + 1
     out = np.zeros((out_h, out_w), dtype=np.float32)
-    im = axs[2].imshow(out, cmap="inferno", vmin=image.min(), vmax=image.max())
+    convolved = signal.correlate(image, kernel, mode="valid")
+    im = axs[2].imshow(out, cmap="inferno", vmin=convolved.min(), vmax=convolved.max())
     axs[2].set_title("Convolved Map")
 
     for ax in axs[:2]:
@@ -327,7 +329,8 @@ def plot_input_kernel_output(
     axs[0].set_title(titles[0])
     add_axis_grid(axs[0])
 
-    axs[1].imshow(kernel, cmap="inferno")
+    kernel_scale = np.max(np.abs(kernel)) * 2
+    axs[1].imshow(kernel, cmap="PuOr_r", vmin=-kernel_scale, vmax=kernel_scale)
     axs[1].set_title(titles[1])
     add_axis_grid(axs[1], pad=6, offset=1.0)
 
@@ -502,7 +505,8 @@ def plot_receptive_field(
                 rect_ax = f"output{kernel_size}_{n-1}"
             x_pos = image.shape[1] // 2 - receptive_field / 2
             y_pos = y_pad - (receptive_field - kernel_size) // 2 + i * kernel_size
-            axs[f"kernel{kernel_size}_{n}"].imshow(kernel, cmap="inferno")
+            kernel_scale = np.max(np.abs(kernel)) * 2
+            axs[f"kernel{kernel_size}_{n}"].imshow(kernel, cmap="PuOr_r", vmin=-kernel_scale, vmax=kernel_scale)
             add_axis_grid(axs[f"kernel{kernel_size}_{n}"], pad=pad, offset=offset)
             axs[f"output{kernel_size}_{n}"].imshow(convolved, cmap="inferno")
             add_axis_grid(axs[f"output{kernel_size}_{n}"])
