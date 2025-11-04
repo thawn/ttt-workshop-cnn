@@ -1,5 +1,7 @@
 # Jupyter Book for CNN Train-the-Trainer
 
+[![DOI](https://zenodo.org/badge/1054803689.svg)](https://doi.org/10.5281/zenodo.17519994)
+
 This repo contains a Jupyter Book with notebooks runnable in Google Colab. Use the Open in Colab badges at the top of each notebook.
 
 ## Link to the book
