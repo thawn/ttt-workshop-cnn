@@ -58,7 +58,7 @@ Open `book/_build/html/index.html` after a successful build.
 
 ## Publish on GitHub Pages
 
-This repo includes a GitHub Actions workflow `.github/workflows/jupyterbook.yml` that builds and publishes on pushes to `main`. Enable Pages in repo settings -> Pages -> Source: `GitHub Actions`.
+This repo includes a GitHub Actions workflow `.github/workflows/jupyterbook.yml` that builds and publishes on pushes to `main`. Enable Pages in repo settings -> Pages -> Source: `Deploy from a branch` -> `gh-pages` -> `/ (root)`.
 
 ## Data
 

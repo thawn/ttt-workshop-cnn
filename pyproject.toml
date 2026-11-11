@@ -52,7 +52,7 @@ dev = [
 ]
 book = [
   # Build the Jupyter Book documentation site
-  "jupyter-book>=1.0.0",
+  "jupyter-book>=1.0.4,<2",
   "kaleido",
 ]
 
